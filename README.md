@@ -12,24 +12,22 @@ Système de suivi des combats de Taekwondo pour le CLUB ATHLETIQUE lors de la Co
 ## 📊 Données Extraites
 
 Le système extrait automatiquement :
-- **11 combattants** du CLUB ATHLETIQUE
+- **7 combattants** du CLUB ATHLETIQUE
 - Leurs **numéros de combattant**
-- Leurs **couleurs** (Bleu/Rouge)
+- Leurs **couleurs d'enregistrement** (Bleu/Rouge)
 - Tous leurs **combats** (actuels et potentiels futurs)
+
+**Note:** Certains combats peuvent apparaître plusieurs fois avec des numéros différents car les brackets de tournoi peuvent faire se rencontrer les mêmes adversaires à différents rounds ou sur différentes pages du PDF. La couleur d'enregistrement (ex: R-151) est la couleur d'inscription du combattant, mais la couleur réelle dans un combat spécifique dépend de la position dans le bracket.
 
 ### Nos Combattants
 
-1. **Hawa DANSOUKHO** - #159 (Rouge)
-2. **CHERINE FAKKOUL** - #151 (Rouge)
-3. **RITEDJ SALEMKOUR** - #147 (Rouge)
-4. **DOUNIA HENDA** - #146 (Bleu)
-5. **Orso OLIVIERI** - #93 (Bleu)
-6. **Alya ZENASNI** - #396 (Bleu)
-7. **SELMA HENDA** - #150 (Bleu)
-8. **Ismaïl SEBAA** - #152 (Bleu)
-9. **MOHAMED MECHACHA** - #148 (Bleu)
-10. **Iliyan-Yahya BARRY** - #245 (Bleu)
-11. **RAYAN MEDROUH** - #149 (Bleu)
+1. **CHERINE FAKKOUL** - #151 (Enregistrement: Rouge)
+2. **RITEDJ SALEMKOUR** - #147 (Enregistrement: Rouge)
+3. **DOUNIA HENDA** - #146 (Enregistrement: Bleu)
+4. **ABDEL SALAM DJABRI** - #145 (Enregistrement: Bleu)
+5. **SELMA HENDA** - #150 (Enregistrement: Bleu)
+6. **MOHAMED MECHACHA** - #148 (Enregistrement: Bleu)
+7. **RAYAN MEDROUH** - #149 (Enregistrement: Bleu)
 
 ## 🚀 Utilisation
 

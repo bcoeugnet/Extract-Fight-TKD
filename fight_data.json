@@ -2,388 +2,368 @@
   "club": "CLUB ATHLETIQUE",
   "fighters": [
     {
-      "name": "Hawa DANSOUKHO",
-      "color": "Red",
-      "number": "159",
-      "club": "CLUB ATHLETIQUE",
-      "page": 6
-    },
-    {
       "name": "CHERINE FAKKOUL",
-      "color": "Red",
       "number": "151",
-      "club": "CLUB ATHLETIQUE",
+      "registration_color": "Red",
       "page": 6
     },
     {
       "name": "RITEDJ SALEMKOUR",
-      "color": "Red",
       "number": "147",
-      "club": "CLUB ATHLETIQUE",
+      "registration_color": "Red",
       "page": 6
     },
     {
       "name": "DOUNIA HENDA",
-      "color": "Blue",
       "number": "146",
-      "club": "CLUB ATHLETIQUE",
+      "registration_color": "Blue",
       "page": 6
     },
     {
-      "name": "Orso OLIVIERI",
-      "color": "Blue",
-      "number": "93",
-      "club": "CLUB ATHLETIQUE",
+      "name": "ABDEL SALAM DJABRI",
+      "number": "145",
+      "registration_color": "Blue",
       "page": 11
     },
     {
-      "name": "Alya ZENASNI",
-      "color": "Blue",
-      "number": "396",
-      "club": "CLUB ATHLETIQUE",
-      "page": 19
-    },
-    {
       "name": "SELMA HENDA",
-      "color": "Blue",
       "number": "150",
-      "club": "CLUB ATHLETIQUE",
+      "registration_color": "Blue",
       "page": 19
-    },
-    {
-      "name": "Ismaïl SEBAA",
-      "color": "Blue",
-      "number": "152",
-      "club": "CLUB ATHLETIQUE",
-      "page": 29
     },
     {
       "name": "MOHAMED MECHACHA",
-      "color": "Blue",
       "number": "148",
-      "club": "CLUB ATHLETIQUE",
+      "registration_color": "Blue",
       "page": 29
     },
     {
-      "name": "Iliyan-Yahya BARRY",
-      "color": "Blue",
-      "number": "245",
-      "club": "CLUB ATHLETIQUE",
-      "page": 31
-    },
-    {
       "name": "RAYAN MEDROUH",
-      "color": "Blue",
       "number": "149",
-      "club": "CLUB ATHLETIQUE",
+      "registration_color": "Blue",
       "page": 31
     }
   ],
   "fights": [
     {
-      "fight_number": "141",
-      "blue_fighter": {
-        "number": "63",
-        "name": "Lina SECIM",
-        "color": "Blue"
-      },
-      "red_fighter": {
-        "number": "159",
+      "fight_number": "113",
+      "fighter1": {
         "name": "Hawa DANSOUKHO",
-        "color": "Red"
+        "number": "159",
+        "registration_color": "Red"
+      },
+      "fighter2": {
+        "name": "CHERINE FAKKOUL",
+        "number": "151",
+        "registration_color": "Red"
       },
       "page": 6,
-      "club_fighter_blue": false,
-      "club_fighter_red": true
+      "our_fighter1": false,
+      "our_fighter2": true
     },
     {
-      "fight_number": "143",
-      "blue_fighter": {
-        "number": "63",
-        "name": "Lina SECIM",
-        "color": "Blue"
-      },
-      "red_fighter": {
-        "number": "159",
+      "fight_number": "117",
+      "fighter1": {
         "name": "Hawa DANSOUKHO",
-        "color": "Red"
+        "number": "159",
+        "registration_color": "Red"
+      },
+      "fighter2": {
+        "name": "CHERINE FAKKOUL",
+        "number": "151",
+        "registration_color": "Red"
       },
       "page": 6,
-      "club_fighter_blue": false,
-      "club_fighter_red": true
+      "our_fighter1": false,
+      "our_fighter2": true
+    },
+    {
+      "fight_number": "159",
+      "fighter1": {
+        "name": "Hawa DANSOUKHO",
+        "number": "159",
+        "registration_color": "Red"
+      },
+      "fighter2": {
+        "name": "CHERINE FAKKOUL",
+        "number": "151",
+        "registration_color": "Red"
+      },
+      "page": 6,
+      "our_fighter1": false,
+      "our_fighter2": true
+    },
+    {
+      "fight_number": "151",
+      "fighter1": {
+        "name": "Hawa DANSOUKHO",
+        "number": "159",
+        "registration_color": "Red"
+      },
+      "fighter2": {
+        "name": "CHERINE FAKKOUL",
+        "number": "151",
+        "registration_color": "Red"
+      },
+      "page": 6,
+      "our_fighter1": false,
+      "our_fighter2": true
     },
     {
       "fight_number": "115",
-      "blue_fighter": {
-        "number": "335",
-        "name": "Tiha PADOVANI",
-        "color": "Blue"
-      },
-      "red_fighter": {
-        "number": "147",
+      "fighter1": {
         "name": "RITEDJ SALEMKOUR",
-        "color": "Red"
+        "number": "147",
+        "registration_color": "Red"
+      },
+      "fighter2": {
+        "name": "DOUNIA HENDA",
+        "number": "146",
+        "registration_color": "Blue"
       },
       "page": 6,
-      "club_fighter_blue": false,
-      "club_fighter_red": true
+      "our_fighter1": true,
+      "our_fighter2": true
     },
     {
       "fight_number": "119",
-      "blue_fighter": {
-        "number": "335",
-        "name": "Tiha PADOVANI",
-        "color": "Blue"
-      },
-      "red_fighter": {
-        "number": "147",
+      "fighter1": {
         "name": "RITEDJ SALEMKOUR",
-        "color": "Red"
+        "number": "147",
+        "registration_color": "Red"
+      },
+      "fighter2": {
+        "name": "DOUNIA HENDA",
+        "number": "146",
+        "registration_color": "Blue"
       },
       "page": 6,
-      "club_fighter_blue": false,
-      "club_fighter_red": true
+      "our_fighter1": true,
+      "our_fighter2": true
     },
     {
       "fight_number": "147",
-      "blue_fighter": {
-        "number": "335",
-        "name": "Tiha PADOVANI",
-        "color": "Blue"
-      },
-      "red_fighter": {
-        "number": "147",
+      "fighter1": {
         "name": "RITEDJ SALEMKOUR",
-        "color": "Red"
+        "number": "147",
+        "registration_color": "Red"
+      },
+      "fighter2": {
+        "name": "DOUNIA HENDA",
+        "number": "146",
+        "registration_color": "Blue"
       },
       "page": 6,
-      "club_fighter_blue": false,
-      "club_fighter_red": true
+      "our_fighter1": true,
+      "our_fighter2": true
     },
     {
       "fight_number": "146",
-      "blue_fighter": {
-        "number": "335",
-        "name": "Tiha PADOVANI",
-        "color": "Blue"
-      },
-      "red_fighter": {
-        "number": "147",
+      "fighter1": {
         "name": "RITEDJ SALEMKOUR",
-        "color": "Red"
+        "number": "147",
+        "registration_color": "Red"
       },
-      "page": 6,
-      "club_fighter_blue": false,
-      "club_fighter_red": true
-    },
-    {
-      "fight_number": "142",
-      "blue_fighter": {
-        "number": "146",
+      "fighter2": {
         "name": "DOUNIA HENDA",
-        "color": "Blue"
-      },
-      "red_fighter": {
-        "number": "147",
-        "name": "RITEDJ SALEMKOUR",
-        "color": "Red"
-      },
-      "page": 6,
-      "club_fighter_blue": true,
-      "club_fighter_red": true
-    },
-    {
-      "fight_number": "144",
-      "blue_fighter": {
         "number": "146",
-        "name": "DOUNIA HENDA",
-        "color": "Blue"
-      },
-      "red_fighter": {
-        "number": "147",
-        "name": "RITEDJ SALEMKOUR",
-        "color": "Red"
+        "registration_color": "Blue"
       },
       "page": 6,
-      "club_fighter_blue": true,
-      "club_fighter_red": true
+      "our_fighter1": true,
+      "our_fighter2": true
     },
     {
       "fight_number": "235",
-      "blue_fighter": {
-        "number": "93",
-        "name": "Orso OLIVIERI",
-        "color": "Blue"
+      "fighter1": {
+        "name": "ABDEL SALAM DJABRI",
+        "number": "145",
+        "registration_color": "Blue"
       },
-      "red_fighter": {
-        "number": "401",
-        "name": "Imran BOUSSAID",
-        "color": "Red"
+      "fighter2": {
+        "name": "Orso OLIVIERI",
+        "number": "93",
+        "registration_color": "Blue"
       },
       "page": 11,
-      "club_fighter_blue": true,
-      "club_fighter_red": false
+      "our_fighter1": true,
+      "our_fighter2": false
     },
     {
       "fight_number": "239",
-      "blue_fighter": {
-        "number": "93",
-        "name": "Orso OLIVIERI",
-        "color": "Blue"
+      "fighter1": {
+        "name": "ABDEL SALAM DJABRI",
+        "number": "145",
+        "registration_color": "Blue"
       },
-      "red_fighter": {
-        "number": "401",
-        "name": "Imran BOUSSAID",
-        "color": "Red"
+      "fighter2": {
+        "name": "Orso OLIVIERI",
+        "number": "93",
+        "registration_color": "Blue"
       },
       "page": 11,
-      "club_fighter_blue": true,
-      "club_fighter_red": false
+      "our_fighter1": true,
+      "our_fighter2": false
     },
     {
       "fight_number": "145",
-      "blue_fighter": {
-        "number": "93",
-        "name": "Orso OLIVIERI",
-        "color": "Blue"
+      "fighter1": {
+        "name": "ABDEL SALAM DJABRI",
+        "number": "145",
+        "registration_color": "Blue"
       },
-      "red_fighter": {
-        "number": "401",
-        "name": "Imran BOUSSAID",
-        "color": "Red"
+      "fighter2": {
+        "name": "Orso OLIVIERI",
+        "number": "93",
+        "registration_color": "Blue"
       },
       "page": 11,
-      "club_fighter_blue": true,
-      "club_fighter_red": false
+      "our_fighter1": true,
+      "our_fighter2": false
     },
     {
       "fight_number": "209",
-      "blue_fighter": {
-        "number": "93",
-        "name": "Orso OLIVIERI",
-        "color": "Blue"
+      "fighter1": {
+        "name": "ABDEL SALAM DJABRI",
+        "number": "145",
+        "registration_color": "Blue"
       },
-      "red_fighter": {
-        "number": "401",
-        "name": "Imran BOUSSAID",
-        "color": "Red"
+      "fighter2": {
+        "name": "Orso OLIVIERI",
+        "number": "93",
+        "registration_color": "Blue"
       },
       "page": 11,
-      "club_fighter_blue": true,
-      "club_fighter_red": false
+      "our_fighter1": true,
+      "our_fighter2": false
     },
     {
       "fight_number": "216",
-      "blue_fighter": {
-        "number": "93",
-        "name": "Orso OLIVIERI",
-        "color": "Blue"
+      "fighter1": {
+        "name": "ABDEL SALAM DJABRI",
+        "number": "145",
+        "registration_color": "Blue"
       },
-      "red_fighter": {
-        "number": "401",
-        "name": "Imran BOUSSAID",
-        "color": "Red"
+      "fighter2": {
+        "name": "Orso OLIVIERI",
+        "number": "93",
+        "registration_color": "Blue"
       },
       "page": 11,
-      "club_fighter_blue": true,
-      "club_fighter_red": false
+      "our_fighter1": true,
+      "our_fighter2": false
     },
     {
-      "fight_number": "169",
-      "blue_fighter": {
-        "number": "93",
-        "name": "Orso OLIVIERI",
-        "color": "Blue"
+      "fight_number": "396",
+      "fighter1": {
+        "name": "Alya ZENASNI",
+        "number": "396",
+        "registration_color": "Blue"
       },
-      "red_fighter": {
-        "number": "169",
-        "name": "Mohamed BELLAHCENE",
-        "color": "Red"
+      "fighter2": {
+        "name": "SELMA HENDA",
+        "number": "150",
+        "registration_color": "Blue"
       },
-      "page": 11,
-      "club_fighter_blue": true,
-      "club_fighter_red": false
+      "page": 19,
+      "our_fighter1": false,
+      "our_fighter2": true
     },
     {
-      "fight_number": "170",
-      "blue_fighter": {
-        "number": "93",
-        "name": "Orso OLIVIERI",
-        "color": "Blue"
+      "fight_number": "150",
+      "fighter1": {
+        "name": "Alya ZENASNI",
+        "number": "396",
+        "registration_color": "Blue"
       },
-      "red_fighter": {
-        "number": "169",
-        "name": "Mohamed BELLAHCENE",
-        "color": "Red"
+      "fighter2": {
+        "name": "SELMA HENDA",
+        "number": "150",
+        "registration_color": "Blue"
       },
-      "page": 11,
-      "club_fighter_blue": true,
-      "club_fighter_red": false
+      "page": 19,
+      "our_fighter1": false,
+      "our_fighter2": true
     },
     {
-      "fight_number": "414",
-      "blue_fighter": {
-        "number": "152",
+      "fight_number": "152",
+      "fighter1": {
         "name": "Ismaïl SEBAA",
-        "color": "Blue"
+        "number": "152",
+        "registration_color": "Blue"
       },
-      "red_fighter": {
-        "number": "176",
-        "name": "Mehdine MOUKLI",
-        "color": "Red"
+      "fighter2": {
+        "name": "MOHAMED MECHACHA",
+        "number": "148",
+        "registration_color": "Blue"
       },
       "page": 29,
-      "club_fighter_blue": true,
-      "club_fighter_red": false
+      "our_fighter1": false,
+      "our_fighter2": true
     },
     {
-      "fight_number": "420",
-      "blue_fighter": {
-        "number": "152",
+      "fight_number": "148",
+      "fighter1": {
         "name": "Ismaïl SEBAA",
-        "color": "Blue"
+        "number": "152",
+        "registration_color": "Blue"
       },
-      "red_fighter": {
-        "number": "176",
-        "name": "Mehdine MOUKLI",
-        "color": "Red"
+      "fighter2": {
+        "name": "MOHAMED MECHACHA",
+        "number": "148",
+        "registration_color": "Blue"
       },
       "page": 29,
-      "club_fighter_blue": true,
-      "club_fighter_red": false
+      "our_fighter1": false,
+      "our_fighter2": true
     },
     {
-      "fight_number": "176",
-      "blue_fighter": {
-        "number": "152",
-        "name": "Ismaïl SEBAA",
-        "color": "Blue"
+      "fight_number": "245",
+      "fighter1": {
+        "name": "Iliyan-Yahya BARRY",
+        "number": "245",
+        "registration_color": "Blue"
       },
-      "red_fighter": {
-        "number": "176",
-        "name": "Mehdine MOUKLI",
-        "color": "Red"
+      "fighter2": {
+        "name": "RAYAN MEDROUH",
+        "number": "149",
+        "registration_color": "Blue"
       },
-      "page": 29,
-      "club_fighter_blue": true,
-      "club_fighter_red": false
+      "page": 31,
+      "our_fighter1": false,
+      "our_fighter2": true
     },
     {
-      "fight_number": "183",
-      "blue_fighter": {
-        "number": "152",
-        "name": "Ismaïl SEBAA",
-        "color": "Blue"
+      "fight_number": "149",
+      "fighter1": {
+        "name": "Iliyan-Yahya BARRY",
+        "number": "245",
+        "registration_color": "Blue"
       },
-      "red_fighter": {
-        "number": "176",
-        "name": "Mehdine MOUKLI",
-        "color": "Red"
+      "fighter2": {
+        "name": "RAYAN MEDROUH",
+        "number": "149",
+        "registration_color": "Blue"
       },
-      "page": 29,
-      "club_fighter_blue": true,
-      "club_fighter_red": false
+      "page": 31,
+      "our_fighter1": false,
+      "our_fighter2": true
+    },
+    {
+      "fight_number": "136",
+      "fighter1": {
+        "name": "Iliyan-Yahya BARRY",
+        "number": "245",
+        "registration_color": "Blue"
+      },
+      "fighter2": {
+        "name": "RAYAN MEDROUH",
+        "number": "149",
+        "registration_color": "Blue"
+      },
+      "page": 31,
+      "our_fighter1": false,
+      "our_fighter2": true
     }
-  ],
-  "fight_results": {}
+  ]
 }

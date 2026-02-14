@@ -373,11 +373,11 @@
         function renderFighters(fighters) {
             const container = document.getElementById('fighters-grid');
             container.innerHTML = fighters.map(fighter => `
-                <div class="fighter-card ${fighter.color.toLowerCase()}">
+                <div class="fighter-card ${fighter.registration_color.toLowerCase()}">
                     <div class="fighter-name">${fighter.name}</div>
                     <div class="fighter-details">
                         <span class="fighter-number">#${fighter.number}</span>
-                        <span class="fighter-color ${fighter.color.toLowerCase()}">${fighter.color}</span>
+                        <span class="fighter-color ${fighter.registration_color.toLowerCase()}">${fighter.registration_color}</span>
                     </div>
                 </div>
             `).join('');
@@ -397,14 +397,20 @@
                 }
             }
             
+            // Sort fights by number
+            uniqueFights.sort((a, b) => parseInt(a.fight_number) - parseInt(b.fight_number));
+            
             container.innerHTML = uniqueFights.map(fight => {
                 const result = results[fight.fight_number];
                 const statusClass = result ? (result === 'win' ? 'won' : 'lost') : '';
                 const statusText = result ? (result === 'win' ? '✓ Victoire' : '✗ Défaite') : 'En attente';
                 const statusBadge = result ? (result === 'win' ? 'win' : 'loss') : 'pending';
                 
-                const blueIsOurs = clubFighterNumbers.has(fight.blue_fighter.number);
-                const redIsOurs = clubFighterNumbers.has(fight.red_fighter.number);
+                const fighter1IsOurs = fight.our_fighter1 || false;
+                const fighter2IsOurs = fight.our_fighter2 || false;
+                
+                const f1 = fight.fighter1;
+                const f2 = fight.fighter2;
                 
                 return `
                     <div class="fight-card ${statusClass}">
@@ -413,14 +419,14 @@
                             <span class="fight-status ${statusBadge}">${statusText}</span>
                         </div>
                         <div class="fight-matchup">
-                            <div class="fighter-info blue ${blueIsOurs ? 'our-fighter' : ''}">
-                                <div>${blueIsOurs ? '★ ' : ''}${fight.blue_fighter.name}</div>
-                                <div style="margin-top: 5px; font-size: 0.9em;">#${fight.blue_fighter.number}</div>
+                            <div class="fighter-info blue ${fighter1IsOurs ? 'our-fighter' : ''}">
+                                <div>${fighter1IsOurs ? '★ ' : ''}${f1.name}</div>
+                                <div style="margin-top: 5px; font-size: 0.9em;">#${f1.number}</div>
                             </div>
                             <div class="vs">VS</div>
-                            <div class="fighter-info red ${redIsOurs ? 'our-fighter' : ''}">
-                                <div>${redIsOurs ? '★ ' : ''}${fight.red_fighter.name}</div>
-                                <div style="margin-top: 5px; font-size: 0.9em;">#${fight.red_fighter.number}</div>
+                            <div class="fighter-info red ${fighter2IsOurs ? 'our-fighter' : ''}">
+                                <div>${fighter2IsOurs ? '★ ' : ''}${f2.name}</div>
+                                <div style="margin-top: 5px; font-size: 0.9em;">#${f2.number}</div>
                             </div>
                         </div>
                     </div>

@@ -71,9 +71,13 @@
         .fighter-card {
             background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
             border-radius: 10px;
-            padding: 20px;
+            padding: 14px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
+            width: 100%;
+            border: none;
+            text-align: left;
+            cursor: pointer;
         }
         
         .fighter-card:hover {
@@ -81,61 +85,58 @@
             box-shadow: 0 8px 15px rgba(0,0,0,0.2);
         }
         
-        .fighter-card.blue {
-            border-left: 5px solid #0066cc;
+        .fighter-card.active {
+            outline: 3px solid #667eea;
         }
         
-        .fighter-card.red {
-            border-left: 5px solid #cc0000;
-        }
-        
-        .fighter-name {
-            font-size: 1.3em;
-            font-weight: bold;
-            margin-bottom: 10px;
-            color: #1e3c72;
-        }
-        
-        .fighter-details {
+        .fighter-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-top: 10px;
+            gap: 10px;
         }
         
-        .fighter-number {
+        .fighter-name {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #1e3c72;
+        }
+
+        .fighter-area {
             background: #1e3c72;
             color: white;
-            padding: 5px 15px;
+            padding: 4px 10px;
             border-radius: 20px;
             font-weight: bold;
+            font-size: 0.85em;
         }
-        
-        .fighter-color {
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-weight: bold;
-            color: white;
+
+        .fights-controls {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 12px;
         }
-        
-        .fighter-color.blue {
-            background: #0066cc;
-        }
-        
-        .fighter-color.red {
-            background: #cc0000;
+
+        .fights-controls select,
+        .fights-controls button {
+            padding: 6px 10px;
+            border-radius: 8px;
+            border: 1px solid #cdd5e0;
+            font-size: 0.95em;
+            background: white;
         }
         
         .fights-list {
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 8px;
         }
         
         .fight-card {
             background: white;
             border-radius: 10px;
-            padding: 20px;
+            padding: 12px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
             border-left: 5px solid #667eea;
             transition: all 0.3s ease;
@@ -160,25 +161,34 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 15px;
+            margin-bottom: 8px;
             flex-wrap: wrap;
-            gap: 10px;
+            gap: 8px;
         }
         
         .fight-number {
-            background: #667eea;
+            background: #334e9f;
             color: white;
-            padding: 8px 20px;
+            padding: 6px 12px;
             border-radius: 25px;
             font-weight: bold;
-            font-size: 1.1em;
+            font-size: 0.95em;
+        }
+
+        .fight-number.red {
+            background: #b71c1c;
+        }
+
+        .fight-number.blue {
+            background: #0d47a1;
         }
         
         .fight-status {
-            padding: 5px 15px;
+            padding: 4px 10px;
             border-radius: 20px;
             font-weight: bold;
             color: white;
+            font-size: 0.85em;
         }
         
         .fight-status.win {
@@ -194,16 +204,14 @@
         }
         
         .fight-matchup {
-            display: grid;
-            grid-template-columns: 1fr auto 1fr;
-            gap: 15px;
-            align-items: center;
+            display: block;
         }
         
         .fighter-info {
-            padding: 10px;
+            padding: 8px 10px;
             border-radius: 8px;
             background: #f5f7fa;
+            width: 100%;
         }
         
         .fighter-info.blue {
@@ -304,6 +312,16 @@
                 
                 <div class="section">
                     <h2>⚔️ Nos Combats</h2>
+                    <div class="fights-controls">
+                        <select id="area-filter">
+                            <option value="all">Toutes les aires</option>
+                        </select>
+                        <select id="sort-mode">
+                            <option value="area">Tri par aire puis combat</option>
+                            <option value="parallel">Tri parallèle (10 avant 15)</option>
+                        </select>
+                        <button id="clear-fighter-filter" style="display: none;">Voir tous les combattants</button>
+                    </div>
                     <div class="fights-list" id="fights-list"></div>
                 </div>
                 
@@ -375,11 +393,20 @@
             return value ? parseInt(value[0], 10) : NaN;
         }
 
+        function getParallelOrder(fightNumber) {
+            const value = String(fightNumber || '').trim();
+            return value.length > 1 ? parseInt(value.slice(1), 10) : parseInt(value, 10);
+        }
+
+        function getOurFighter(fight) {
+            return fight.our_fighter1 ? fight.fighter1 : fight.fighter2;
+        }
+
         function renderFighters(fighters) {
             const container = document.getElementById('fighters-grid');
             const areaByFighter = {};
             window.currentFights.forEach(fight => {
-                const fighterName = fight.fighter1?.name;
+                const fighterName = getOurFighter(fight)?.name;
                 if (!fighterName) return;
                 const area = getAreaFromFightNumber(fight.fight_number);
                 if (!areaByFighter[fighterName] || area < areaByFighter[fighterName]) {
@@ -394,14 +421,23 @@
             });
 
             container.innerHTML = sortedFighters.map(fighter => `
-                <div class="fighter-card ${fighter.registration_color.toLowerCase()}">
-                    <div class="fighter-name">${fighter.name}</div>
-                    <div class="fighter-details">
-                        <span class="fighter-number">Aire ${areaByFighter[fighter.name] || '-'}</span>
-                        <span class="fighter-color ${fighter.registration_color.toLowerCase()}">${fighter.registration_color}</span>
+                <button class="fighter-card ${window.selectedFighter === fighter.name ? 'active' : ''}" data-fighter-name="${fighter.name}">
+                    <div class="fighter-header">
+                        <span class="fighter-name">${fighter.name}</span>
+                        <span class="fighter-area">Aire ${areaByFighter[fighter.name] || '-'}</span>
                     </div>
-                </div>
+                </button>
             `).join('');
+
+            container.querySelectorAll('.fighter-card').forEach(card => {
+                card.addEventListener('click', () => {
+                    const name = card.dataset.fighterName;
+                    window.selectedFighter = window.selectedFighter === name ? null : name;
+                    updateFighterFilterButton();
+                    renderFighters(window.currentFighters);
+                    renderFights(window.currentFights, window.currentResults);
+                });
+            });
         }
 
         function getRoundLabel(remainingFights) {
@@ -418,9 +454,18 @@
 
             const visibleFights = fights
                 .filter(fight => fight.our_fighter1 || fight.our_fighter2)
+                .filter(fight => {
+                    if (window.selectedFighter && getOurFighter(fight)?.name !== window.selectedFighter) return false;
+                    const selectedArea = document.getElementById('area-filter').value;
+                    return selectedArea === 'all' || String(getAreaFromFightNumber(fight.fight_number)) === selectedArea;
+                })
                 .sort((a, b) => {
+                    const sortMode = document.getElementById('sort-mode').value;
                     const areaA = getAreaFromFightNumber(a.fight_number);
                     const areaB = getAreaFromFightNumber(b.fight_number);
+                    if (sortMode === 'parallel') {
+                        return getParallelOrder(a.fight_number) - getParallelOrder(b.fight_number) || areaA - areaB;
+                    }
                     return areaA - areaB || parseInt(a.fight_number, 10) - parseInt(b.fight_number, 10);
                 });
 
@@ -441,16 +486,17 @@
                 const statusText = result ? (result === 'win' ? '✓ Victoire' : '✗ Défaite') : 'En attente';
                 const statusBadge = result ? (result === 'win' ? 'win' : 'loss') : 'pending';
 
-                const ourFighter = fight.our_fighter1 ? fight.fighter1 : fight.fighter2;
+                const ourFighter = getOurFighter(fight);
                 const list = fightsByFighter[ourFighter.name] || [];
                 const fightIndex = list.findIndex(f => f.fight_number === fight.fight_number);
                 const remainingFights = list.length - fightIndex;
                 const area = getAreaFromFightNumber(fight.fight_number);
+                const fightColor = (ourFighter.registration_color || '').toLowerCase();
 
                 return `
                     <div class="fight-card ${statusClass}">
                         <div class="fight-header">
-                            <span class="fight-number">Aire ${area} - Combat #${fight.fight_number}</span>
+                            <span class="fight-number ${fightColor}">Aire ${area} - Combat #${fight.fight_number}</span>
                             <span class="fight-status ${statusBadge}">${statusText}</span>
                         </div>
                         <div class="fight-matchup">
@@ -464,16 +510,64 @@
             }).join('');
         }
 
+        function updateFighterFilterButton() {
+            const button = document.getElementById('clear-fighter-filter');
+            if (window.selectedFighter) {
+                button.style.display = 'inline-block';
+                button.textContent = `Voir tous les combattants (filtre: ${window.selectedFighter})`;
+            } else {
+                button.style.display = 'none';
+            }
+        }
+
+        function setupFilters(fights) {
+            const areaFilter = document.getElementById('area-filter');
+            const sortMode = document.getElementById('sort-mode');
+            const clearFighterFilter = document.getElementById('clear-fighter-filter');
+            const selectedArea = areaFilter.value || 'all';
+            const selectedSortMode = sortMode.value || 'area';
+
+            const areas = [...new Set(fights
+                .filter(fight => fight.our_fighter1 || fight.our_fighter2)
+                .map(fight => getAreaFromFightNumber(fight.fight_number))
+                .filter(area => !Number.isNaN(area))
+            )].sort((a, b) => a - b);
+
+            areaFilter.innerHTML = `
+                <option value="all">Toutes les aires</option>
+                ${areas.map(area => `<option value="${area}">Aire ${area}</option>`).join('')}
+            `;
+            areaFilter.value = areas.includes(Number(selectedArea)) || selectedArea === 'all' ? selectedArea : 'all';
+            sortMode.value = selectedSortMode;
+
+            if (!window.filtersInitialized) {
+                areaFilter.addEventListener('change', () => renderFights(window.currentFights, window.currentResults));
+                sortMode.addEventListener('change', () => renderFights(window.currentFights, window.currentResults));
+                clearFighterFilter.addEventListener('click', () => {
+                    window.selectedFighter = null;
+                    updateFighterFilterButton();
+                    renderFighters(window.currentFighters);
+                    renderFights(window.currentFights, window.currentResults);
+                });
+                window.filtersInitialized = true;
+            }
+        }
+
         async function init() {
             try {
                 const data = await loadData();
                 window.currentFights = data.fights || [];
+                window.currentFighters = data.fighters || [];
+                window.currentResults = data.results || {};
+                window.selectedFighter = window.selectedFighter || null;
                 const stats = calculateStats(data.fighters, data.fights, data.results);
                 
                 renderStats(stats);
+                setupFilters(data.fights);
                 renderFighters(data.fighters);
                 
                 renderFights(data.fights, data.results);
+                updateFighterFilterButton();
                 
                 document.getElementById('loading').style.display = 'none';
                 document.getElementById('main-content').style.display = 'block';

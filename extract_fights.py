@@ -13,17 +13,24 @@ TARGET_CLUB = "CLUB ATHLETIQUE"
 FIGHT_NUMBER_PATTERN = re.compile(r'^\d{3}$')
 FIGHTER_PATTERN = re.compile(r'\(([BR])-(\d+)\)\s+([A-ZÀÂÆÇÉÈÊËÏÎÔŒÙÛÜŸ][A-ZÀÂÆÇÉÈÊËÏÎÔŒÙÛÜŸa-zàâæçéèêëïîôœùûüÿ\s\-]+?)(?=\s+[BR]-\.\.|FRA|\s+\(|\s*$)')
 PLACEHOLDER_COLORS = {"B-........": "Blue", "R-........": "Red"}
+MAX_COLOR_MARKER_VERTICAL_DISTANCE = 22
+MAX_COLOR_MARKER_HORIZONTAL_DISTANCE = 70
+COLOR_MARKER_HORIZONTAL_WEIGHT = 0.35
+FIGHT_TRANSITION_X_OFFSET = 12
+CENTER_TRANSITION_MARGIN = 45
+MAX_VERTICAL_FIGHT_MATCH_DISTANCE = 120
+MAX_BRACKET_DEPTH = 8
 
 
 def _find_nearest_color_marker(markers, x, top):
     nearest = None
     best_score = None
     for marker in markers:
-        score = abs(marker['top'] - top) + 0.35 * abs(marker['x0'] - x)
+        score = abs(marker['top'] - top) + COLOR_MARKER_HORIZONTAL_WEIGHT * abs(marker['x0'] - x)
         if best_score is None or score < best_score:
             best_score = score
             nearest = marker
-    if nearest and abs(nearest['top'] - top) <= 22 and abs(nearest['x0'] - x) <= 70:
+    if nearest and abs(nearest['top'] - top) <= MAX_COLOR_MARKER_VERTICAL_DISTANCE and abs(nearest['x0'] - x) <= MAX_COLOR_MARKER_HORIZONTAL_DISTANCE:
         return nearest['color']
     return None
 
@@ -32,7 +39,7 @@ def _extract_fighter_path(numbers, markers, fighter_x, fighter_top, registration
     if not numbers:
         return []
 
-    close_numbers = [n for n in numbers if abs(n['top'] - fighter_top) <= 120]
+    close_numbers = [n for n in numbers if abs(n['top'] - fighter_top) <= MAX_VERTICAL_FIGHT_MATCH_DISTANCE]
     if not close_numbers:
         close_numbers = numbers
     current = min(close_numbers, key=lambda n: (abs(n['top'] - fighter_top) * 2) + abs(n['x0'] - fighter_x))
@@ -41,16 +48,16 @@ def _extract_fighter_path(numbers, markers, fighter_x, fighter_top, registration
     path = [(current['number'], current_color)]
     visited = {current['number']}
     center_x = page_width / 2
-    center_margin = 45
+    center_margin = CENTER_TRANSITION_MARGIN
 
-    for _ in range(8):
+    for _ in range(MAX_BRACKET_DEPTH):
         marker_color = _find_nearest_color_marker(markers, current['x0'], current['top'])
         next_color = marker_color or current_color
 
         if is_right_side:
-            candidate_numbers = [n for n in numbers if (center_x - center_margin) <= n['x0'] < current['x0'] - 12]
+            candidate_numbers = [n for n in numbers if (center_x - center_margin) <= n['x0'] < current['x0'] - FIGHT_TRANSITION_X_OFFSET]
         else:
-            candidate_numbers = [n for n in numbers if current['x0'] + 12 < n['x0'] <= (center_x + center_margin)]
+            candidate_numbers = [n for n in numbers if current['x0'] + FIGHT_TRANSITION_X_OFFSET < n['x0'] <= (center_x + center_margin)]
 
         if not candidate_numbers:
             break

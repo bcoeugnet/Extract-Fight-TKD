@@ -370,13 +370,18 @@
             `;
         }
 
+        function getAreaFromFightNumber(fightNumber) {
+            const value = String(fightNumber || '').trim();
+            return value ? parseInt(value[0], 10) : NaN;
+        }
+
         function renderFighters(fighters) {
             const container = document.getElementById('fighters-grid');
             const areaByFighter = {};
             window.currentFights.forEach(fight => {
                 const fighterName = fight.fighter1?.name;
                 if (!fighterName) return;
-                const area = parseInt(String(fight.fight_number)[0], 10);
+                const area = getAreaFromFightNumber(fight.fight_number);
                 if (!areaByFighter[fighterName] || area < areaByFighter[fighterName]) {
                     areaByFighter[fighterName] = area;
                 }
@@ -414,8 +419,8 @@
             const visibleFights = fights
                 .filter(fight => fight.our_fighter1 || fight.our_fighter2)
                 .sort((a, b) => {
-                    const areaA = parseInt(String(a.fight_number)[0], 10);
-                    const areaB = parseInt(String(b.fight_number)[0], 10);
+                    const areaA = getAreaFromFightNumber(a.fight_number);
+                    const areaB = getAreaFromFightNumber(b.fight_number);
                     return areaA - areaB || parseInt(a.fight_number, 10) - parseInt(b.fight_number, 10);
                 });
 
@@ -440,7 +445,7 @@
                 const list = fightsByFighter[ourFighter.name] || [];
                 const fightIndex = list.findIndex(f => f.fight_number === fight.fight_number);
                 const remainingFights = list.length - fightIndex;
-                const area = String(fight.fight_number)[0];
+                const area = getAreaFromFightNumber(fight.fight_number);
 
                 return `
                     <div class="fight-card ${statusClass}">

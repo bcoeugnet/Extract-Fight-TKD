@@ -12,7 +12,15 @@ TARGET_CLUB = "CLUB ATHLETIQUE"
 
 
 def parse_pdf_for_club(pdf_path):
-    """Parse PDF and extract club fighters with their fights"""
+    """Parse PDF and extract club fighters with their fights
+    
+    Note: The same matchup may appear with multiple fight numbers because:
+    - Tournament brackets can show the same pair at different stages
+    - The PDF may reference the same fight from different pages
+    - Fight numbers in different rounds of the bracket may overlap
+    
+    The website handles this by deduplicating based on fight_number.
+    """
     
     club_fighters = []
     all_fights = []

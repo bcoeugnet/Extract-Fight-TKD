@@ -383,7 +383,7 @@
             `).join('');
         }
 
-        function renderFights(fights, results, clubFighterNumbers) {
+        function renderFights(fights, results) {
             const container = document.getElementById('fights-list');
             
             // Remove duplicate fights (same fight number)
@@ -442,8 +442,7 @@
                 renderStats(stats);
                 renderFighters(data.fighters);
                 
-                const clubFighterNumbers = new Set(data.fighters.map(f => f.number));
-                renderFights(data.fights, data.results, clubFighterNumbers);
+                renderFights(data.fights, data.results);
                 
                 document.getElementById('loading').style.display = 'none';
                 document.getElementById('main-content').style.display = 'block';

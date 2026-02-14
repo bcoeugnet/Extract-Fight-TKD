@@ -28,13 +28,13 @@
 
 ## Exemple Complet
 
-Si Hawa DANSOUKHO (Combat #141) a gagné et Orso OLIVIERI (Combat #235) a perdu :
+Si CHERINE FAKKOUL (Combat #117) a gagné et ABDEL SALAM DJABRI (Combat #145) a perdu :
 
 ```json
 {
   "fight_results": {
-    "141": "win",
-    "235": "loss"
+    "117": "win",
+    "145": "loss"
   },
   "comments": {
     "instructions": "Update fight results by adding entries like: 'fight_number': 'win' or 'loss'",

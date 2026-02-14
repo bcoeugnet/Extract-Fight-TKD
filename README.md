@@ -125,12 +125,12 @@ Le site est optimisé pour :
 
 ## 🏆 Exemple de Mise à Jour
 
-Après le combat #141 (Hawa DANSOUKHO vs Lina SECIM) :
+Après le combat #117 (CHERINE FAKKOUL vs Hawa DANSOUKHO) :
 
 ```json
 {
   "fight_results": {
-    "141": "win"
+    "117": "win"
   }
 }
 ```

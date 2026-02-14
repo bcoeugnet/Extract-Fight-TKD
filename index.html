@@ -303,7 +303,7 @@
                 </div>
                 
                 <div class="section">
-                    <h2>⚔️ Tous les Combats</h2>
+                    <h2>⚔️ Nos Combats</h2>
                     <div class="fights-list" id="fights-list"></div>
                 </div>
                 
@@ -372,61 +372,86 @@
 
         function renderFighters(fighters) {
             const container = document.getElementById('fighters-grid');
-            container.innerHTML = fighters.map(fighter => `
+            const areaByFighter = {};
+            window.currentFights.forEach(fight => {
+                const fighterName = fight.fighter1?.name;
+                if (!fighterName) return;
+                const area = parseInt(String(fight.fight_number)[0], 10);
+                if (!areaByFighter[fighterName] || area < areaByFighter[fighterName]) {
+                    areaByFighter[fighterName] = area;
+                }
+            });
+
+            const sortedFighters = [...fighters].sort((a, b) => {
+                const areaA = areaByFighter[a.name] || 99;
+                const areaB = areaByFighter[b.name] || 99;
+                return areaA - areaB || a.name.localeCompare(b.name);
+            });
+
+            container.innerHTML = sortedFighters.map(fighter => `
                 <div class="fighter-card ${fighter.registration_color.toLowerCase()}">
                     <div class="fighter-name">${fighter.name}</div>
                     <div class="fighter-details">
-                        <span class="fighter-number">#${fighter.number}</span>
+                        <span class="fighter-number">Aire ${areaByFighter[fighter.name] || '-'}</span>
                         <span class="fighter-color ${fighter.registration_color.toLowerCase()}">${fighter.registration_color}</span>
                     </div>
                 </div>
             `).join('');
         }
 
+        function getRoundLabel(remainingFights) {
+            if (remainingFights === 1) return 'Finale';
+            if (remainingFights === 2) return 'Demi-finale';
+            if (remainingFights === 3) return 'Quart de finale';
+            if (remainingFights === 4) return 'Huitième de finale';
+            if (remainingFights === 5) return 'Seizième de finale';
+            return `Tour ${remainingFights}`;
+        }
+
         function renderFights(fights, results) {
             const container = document.getElementById('fights-list');
-            
-            // Remove duplicate fights (same fight number)
-            const uniqueFights = [];
-            const seenFightNumbers = new Set();
-            
-            for (const fight of fights) {
-                if (!seenFightNumbers.has(fight.fight_number)) {
-                    seenFightNumbers.add(fight.fight_number);
-                    uniqueFights.push(fight);
-                }
-            }
-            
-            // Sort fights by number
-            uniqueFights.sort((a, b) => parseInt(a.fight_number) - parseInt(b.fight_number));
-            
-            container.innerHTML = uniqueFights.map(fight => {
+
+            const visibleFights = fights
+                .filter(fight => fight.our_fighter1 || fight.our_fighter2)
+                .sort((a, b) => {
+                    const areaA = parseInt(String(a.fight_number)[0], 10);
+                    const areaB = parseInt(String(b.fight_number)[0], 10);
+                    return areaA - areaB || parseInt(a.fight_number, 10) - parseInt(b.fight_number, 10);
+                });
+
+            const fightsByFighter = {};
+            visibleFights.forEach(fight => {
+                const ourFighter = fight.our_fighter1 ? fight.fighter1 : fight.fighter2;
+                if (!ourFighter || !ourFighter.name) return;
+                if (!fightsByFighter[ourFighter.name]) fightsByFighter[ourFighter.name] = [];
+                fightsByFighter[ourFighter.name].push(fight);
+            });
+            Object.values(fightsByFighter).forEach(list => {
+                list.sort((a, b) => parseInt(a.fight_number, 10) - parseInt(b.fight_number, 10));
+            });
+
+            container.innerHTML = visibleFights.map(fight => {
                 const result = results[fight.fight_number];
                 const statusClass = result ? (result === 'win' ? 'won' : 'lost') : '';
                 const statusText = result ? (result === 'win' ? '✓ Victoire' : '✗ Défaite') : 'En attente';
                 const statusBadge = result ? (result === 'win' ? 'win' : 'loss') : 'pending';
-                
-                const fighter1IsOurs = fight.our_fighter1 || false;
-                const fighter2IsOurs = fight.our_fighter2 || false;
-                
-                const f1 = fight.fighter1;
-                const f2 = fight.fighter2;
-                
+
+                const ourFighter = fight.our_fighter1 ? fight.fighter1 : fight.fighter2;
+                const list = fightsByFighter[ourFighter.name] || [];
+                const fightIndex = list.findIndex(f => f.fight_number === fight.fight_number);
+                const remainingFights = list.length - fightIndex;
+                const area = String(fight.fight_number)[0];
+
                 return `
                     <div class="fight-card ${statusClass}">
                         <div class="fight-header">
-                            <span class="fight-number">Combat #${fight.fight_number}</span>
+                            <span class="fight-number">Aire ${area} - Combat #${fight.fight_number}</span>
                             <span class="fight-status ${statusBadge}">${statusText}</span>
                         </div>
                         <div class="fight-matchup">
-                            <div class="fighter-info blue ${fighter1IsOurs ? 'our-fighter' : ''}">
-                                <div>${fighter1IsOurs ? '★ ' : ''}${f1.name}</div>
-                                <div style="margin-top: 5px; font-size: 0.9em;">#${f1.number}</div>
-                            </div>
-                            <div class="vs">VS</div>
-                            <div class="fighter-info red ${fighter2IsOurs ? 'our-fighter' : ''}">
-                                <div>${fighter2IsOurs ? '★ ' : ''}${f2.name}</div>
-                                <div style="margin-top: 5px; font-size: 0.9em;">#${f2.number}</div>
+                            <div class="fighter-info ${ourFighter.registration_color.toLowerCase()} our-fighter">
+                                <div>★ ${ourFighter.name}</div>
+                                <div style="margin-top: 5px; font-size: 0.9em;">${ourFighter.registration_color} - ${getRoundLabel(remainingFights)}</div>
                             </div>
                         </div>
                     </div>
@@ -437,6 +462,7 @@
         async function init() {
             try {
                 const data = await loadData();
+                window.currentFights = data.fights || [];
                 const stats = calculateStats(data.fighters, data.fights, data.results);
                 
                 renderStats(stats);

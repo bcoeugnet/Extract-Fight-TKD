@@ -318,7 +318,7 @@
                         </select>
                         <select id="sort-mode">
                             <option value="area">Tri par aire puis combat</option>
-                            <option value="parallel">Tri parallèle (ordre de tour : 10 avant 15)</option>
+                            <option value="parallel">Tri parallèle (tour commun toutes les aires)</option>
                         </select>
                         <button id="clear-fighter-filter" style="display: none;">Voir tous les combattants</button>
                     </div>
@@ -360,7 +360,7 @@
         function calculateStats(fighters, fights, results) {
             const totalFighters = fighters.length;
             const totalFights = fights.length;
-            const completedFights = Object.values(results).filter(result => result === 'win' || result === 'loss').length;
+            const completedFights = Object.values(results).filter(isCompletedResult).length;
             const wins = Object.values(results).filter(r => r === 'win').length;
             
             return { totalFighters, totalFights, completedFights, wins };
@@ -400,6 +400,10 @@
 
         function getOurFighter(fight) {
             return fight.our_fighter1 ? fight.fighter1 : fight.fighter2;
+        }
+
+        function isCompletedResult(result) {
+            return result === 'win' || result === 'loss';
         }
 
         function renderFighters(fighters) {
@@ -484,9 +488,10 @@
 
             container.innerHTML = visibleFights.map(fight => {
                 const result = results[fight.fight_number];
-                const statusClass = result ? (result === 'win' ? 'won' : 'lost') : '';
-                const statusText = result ? (result === 'win' ? '✓ Victoire' : '✗ Défaite') : 'En attente';
-                const statusBadge = result ? (result === 'win' ? 'win' : 'loss') : 'pending';
+                const hasCompletedResult = isCompletedResult(result);
+                const statusClass = hasCompletedResult ? (result === 'win' ? 'won' : 'lost') : '';
+                const statusText = hasCompletedResult ? (result === 'win' ? '✓ Victoire' : '✗ Défaite') : 'En attente';
+                const statusBadge = hasCompletedResult ? (result === 'win' ? 'win' : 'loss') : 'pending';
 
                 const ourFighter = getOurFighter(fight);
                 const list = fightsByFighter[ourFighter.name] || [];
@@ -539,7 +544,9 @@
                 <option value="all">Toutes les aires</option>
                 ${areas.map(area => `<option value="${area}">Aire ${area}</option>`).join('')}
             `;
-            areaFilter.value = (selectedArea === 'all' || areas.includes(Number(selectedArea))) ? selectedArea : 'all';
+            areaFilter.value = selectedArea === 'all'
+                ? 'all'
+                : (areas.includes(Number(selectedArea)) ? selectedArea : 'all');
             sortMode.value = selectedSortMode;
 
             if (!window.filtersInitialized) {

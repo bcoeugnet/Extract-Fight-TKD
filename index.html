@@ -318,7 +318,7 @@
                         </select>
                         <select id="sort-mode">
                             <option value="area">Tri par aire puis combat</option>
-                            <option value="parallel">Tri parallèle (10 avant 15)</option>
+                            <option value="parallel">Tri parallèle (ordre de tour : 10 avant 15)</option>
                         </select>
                         <button id="clear-fighter-filter" style="display: none;">Voir tous les combattants</button>
                     </div>
@@ -360,7 +360,7 @@
         function calculateStats(fighters, fights, results) {
             const totalFighters = fighters.length;
             const totalFights = fights.length;
-            const completedFights = Object.keys(results).length;
+            const completedFights = Object.values(results).filter(result => result === 'win' || result === 'loss').length;
             const wins = Object.values(results).filter(r => r === 'win').length;
             
             return { totalFighters, totalFights, completedFights, wins };
@@ -464,7 +464,9 @@
                     const areaA = getAreaFromFightNumber(a.fight_number);
                     const areaB = getAreaFromFightNumber(b.fight_number);
                     if (sortMode === 'parallel') {
-                        return getParallelOrder(a.fight_number) - getParallelOrder(b.fight_number) || areaA - areaB;
+                        return getParallelOrder(a.fight_number) - getParallelOrder(b.fight_number)
+                            || areaA - areaB
+                            || parseInt(a.fight_number, 10) - parseInt(b.fight_number, 10);
                     }
                     return areaA - areaB || parseInt(a.fight_number, 10) - parseInt(b.fight_number, 10);
                 });
@@ -537,7 +539,7 @@
                 <option value="all">Toutes les aires</option>
                 ${areas.map(area => `<option value="${area}">Aire ${area}</option>`).join('')}
             `;
-            areaFilter.value = areas.includes(Number(selectedArea)) || selectedArea === 'all' ? selectedArea : 'all';
+            areaFilter.value = (selectedArea === 'all' || areas.includes(Number(selectedArea))) ? selectedArea : 'all';
             sortMode.value = selectedSortMode;
 
             if (!window.filtersInitialized) {

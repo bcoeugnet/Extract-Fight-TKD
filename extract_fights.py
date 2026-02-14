@@ -10,6 +10,73 @@ import json
 
 TARGET_CLUB = "CLUB ATHLETIQUE"
 
+FIGHT_NUMBER_PATTERN = re.compile(r'^\d{3}$')
+FIGHTER_PATTERN = re.compile(r'\(([BR])-(\d+)\)\s+([A-ZÀÂÆÇÉÈÊËÏÎÔŒÙÛÜŸ][A-ZÀÂÆÇÉÈÊËÏÎÔŒÙÛÜŸa-zàâæçéèêëïîôœùûüÿ\s\-]+?)(?=\s+[BR]-\.\.|FRA|\s+\(|\s*$)')
+PLACEHOLDER_COLORS = {"B-........": "Blue", "R-........": "Red"}
+MAX_COLOR_MARKER_VERTICAL_DISTANCE = 22
+MAX_COLOR_MARKER_HORIZONTAL_DISTANCE = 70
+COLOR_MARKER_HORIZONTAL_WEIGHT = 0.35
+FIGHT_TRANSITION_X_OFFSET = 12
+CENTER_TRANSITION_MARGIN = 45
+MAX_VERTICAL_FIGHT_MATCH_DISTANCE = 120
+MAX_BRACKET_DEPTH = 8
+
+
+def _find_nearest_color_marker(markers, x, top):
+    nearest = None
+    best_score = None
+    for marker in markers:
+        score = abs(marker['top'] - top) + COLOR_MARKER_HORIZONTAL_WEIGHT * abs(marker['x0'] - x)
+        if best_score is None or score < best_score:
+            best_score = score
+            nearest = marker
+    if nearest and abs(nearest['top'] - top) <= MAX_COLOR_MARKER_VERTICAL_DISTANCE and abs(nearest['x0'] - x) <= MAX_COLOR_MARKER_HORIZONTAL_DISTANCE:
+        return nearest['color']
+    return None
+
+
+def _extract_fighter_path(numbers, markers, fighter_x, fighter_top, registration_color, page_width):
+    if not numbers:
+        return []
+
+    close_numbers = [n for n in numbers if abs(n['top'] - fighter_top) <= MAX_VERTICAL_FIGHT_MATCH_DISTANCE]
+    if not close_numbers:
+        close_numbers = numbers
+    current = min(close_numbers, key=lambda n: (abs(n['top'] - fighter_top) * 2) + abs(n['x0'] - fighter_x))
+    is_right_side = current['x0'] > (page_width / 2)
+    current_color = registration_color
+    path = [(current['number'], current_color)]
+    visited = {current['number']}
+    center_x = page_width / 2
+    center_margin = CENTER_TRANSITION_MARGIN
+
+    for _ in range(MAX_BRACKET_DEPTH):
+        marker_color = _find_nearest_color_marker(markers, current['x0'], current['top'])
+        next_color = marker_color or current_color
+
+        if is_right_side:
+            candidate_numbers = [n for n in numbers if (center_x - center_margin) <= n['x0'] < current['x0'] - FIGHT_TRANSITION_X_OFFSET]
+        else:
+            candidate_numbers = [n for n in numbers if current['x0'] + FIGHT_TRANSITION_X_OFFSET < n['x0'] <= (center_x + center_margin)]
+
+        if not candidate_numbers:
+            break
+
+        next_fight = min(
+            candidate_numbers,
+            key=lambda n: (abs(n['top'] - current['top']) * 2) + abs(abs(n['x0'] - center_x) - abs(current['x0'] - center_x))
+        )
+
+        if next_fight['number'] in visited:
+            break
+
+        path.append((next_fight['number'], next_color))
+        visited.add(next_fight['number'])
+        current = next_fight
+        current_color = next_color
+
+    return path
+
 
 def parse_pdf_for_club(pdf_path):
     """Parse PDF and extract club fighters with their fights
@@ -22,8 +89,8 @@ def parse_pdf_for_club(pdf_path):
     The website handles this by deduplicating based on fight_number.
     """
     
-    club_fighters = []
-    all_fights = []
+    club_fighters = {}
+    relevant_fights = []
     
     with pdfplumber.open(pdf_path) as pdf:
         for page_num, page in enumerate(pdf.pages, 1):
@@ -32,6 +99,15 @@ def parse_pdf_for_club(pdf_path):
                 continue
             
             lines = text.split('\n')
+            words = page.extract_words(use_text_flow=True)
+            number_words = [
+                {'number': w['text'], 'x0': w['x0'], 'top': w['top']}
+                for w in words if FIGHT_NUMBER_PATTERN.match(w['text'])
+            ]
+            color_markers = [
+                {'color': PLACEHOLDER_COLORS[w['text']], 'x0': w['x0'], 'top': w['top']}
+                for w in words if w['text'] in PLACEHOLDER_COLORS
+            ]
             
             # Find all occurrences of CLUB ATHLETIQUE
             for i, line in enumerate(lines):
@@ -58,24 +134,16 @@ def parse_pdf_for_club(pdf_path):
                     continue
                 
                 # Extract all fighters from the fighter line
-                fighter_matches = list(re.finditer(
-                    r'\(([BR])-(\d+)\)\s+([A-ZÀÂÆÇÉÈÊËÏÎÔŒÙÛÜŸ][A-ZÀÂÆÇÉÈÊËÏÎÔŒÙÛÜŸa-zàâæçéèêëïîôœùûüÿ\s\-]+?)(?=\s+[BR]-\.\.|FRA|\s+\(|\s*$)',
-                    fighter_line
-                ))
+                fighter_matches = list(FIGHTER_PATTERN.finditer(fighter_line))
                 
                 if not fighter_matches:
                     continue
                 
+                selected_matches = []
                 # Determine which fighters belong to CLUB ATHLETIQUE
                 if club_count == 2:
                     # Both fighters are from CLUB ATHLETIQUE
-                    for match in fighter_matches:
-                        club_fighters.append({
-                            'name': match.group(3).strip(),
-                            'number': match.group(2),
-                            'registration_color': 'Blue' if match.group(1) == 'B' else 'Red',
-                            'page': page_num
-                        })
+                    selected_matches = fighter_matches
                 
                 elif club_count == 1 and len(fighter_matches) >= 2:
                     # Only one club is CLUB ATHLETIQUE - determine which fighter
@@ -88,73 +156,61 @@ def parse_pdf_for_club(pdf_path):
                     our_fighter_idx = 1 if club_pos > line_midpoint else 0
                     
                     if our_fighter_idx < len(fighter_matches):
-                        match = fighter_matches[our_fighter_idx]
-                        club_fighters.append({
-                            'name': match.group(3).strip(),
-                            'number': match.group(2),
-                            'registration_color': 'Blue' if match.group(1) == 'B' else 'Red',
+                        selected_matches = [fighter_matches[our_fighter_idx]]
+
+                for match in selected_matches:
+                    fighter_number = match.group(2)
+                    registration_color = 'Blue' if match.group(1) == 'B' else 'Red'
+                    fighter_name = match.group(3).strip()
+
+                    if fighter_number not in club_fighters:
+                        club_fighters[fighter_number] = {
+                            'name': fighter_name,
+                            'number': fighter_number,
+                            'registration_color': registration_color,
                             'page': page_num
-                        })
-                
-                # Now extract fight numbers - look for 3-digit numbers around this area
-                fight_nums = []
-                for offset in range(-3, 3):
-                    if 0 <= i + offset < len(lines):
-                        nums = re.findall(r'\b(\d{3})\b', lines[i + offset])
-                        fight_nums.extend(nums)
-                
-                # Store fight information with both fighters if we have them
-                if len(fighter_matches) >= 2 and fight_nums:
-                    for fight_num in fight_nums:
-                        # Avoid duplicates - skip numbers that look like IDs (> 400)
-                        if int(fight_num) > 400:
-                            continue
-                        
-                        f1 = fighter_matches[0]
-                        f2 = fighter_matches[1]
-                        
-                        all_fights.append({
-                            'fight_number': fight_num,
+                        }
+
+                    fighter_tag = f"({match.group(1)}-{fighter_number})"
+                    fighter_word_candidates = [w for w in words if w['text'] == fighter_tag]
+                    if not fighter_word_candidates:
+                        continue
+                    first_name_token = fighter_name.split()[0]
+                    first_name_words = [w for w in words if w['text'] == first_name_token]
+                    if first_name_words:
+                        fighter_word = min(
+                            fighter_word_candidates,
+                            key=lambda tag: min(abs(tag['top'] - name_word['top']) for name_word in first_name_words)
+                        )
+                    else:
+                        fighter_word = fighter_word_candidates[0]
+                    if not fighter_word:
+                        continue
+
+                    path = _extract_fighter_path(
+                        number_words, color_markers, fighter_word['x0'], fighter_word['top'],
+                        registration_color, page.width
+                    )
+
+                    for fight_number, fight_color in path:
+                        relevant_fights.append({
+                            'fight_number': fight_number,
                             'fighter1': {
-                                'name': f1.group(3).strip(),
-                                'number': f1.group(2),
-                                'registration_color': 'Blue' if f1.group(1) == 'B' else 'Red'
+                                'name': fighter_name,
+                                'number': fighter_number,
+                                'registration_color': fight_color
                             },
                             'fighter2': {
-                                'name': f2.group(3).strip(),
-                                'number': f2.group(2),
-                                'registration_color': 'Blue' if f2.group(1) == 'B' else 'Red'
+                                'name': 'À déterminer',
+                                'number': '',
+                                'registration_color': ''
                             },
+                            'our_fighter1': True,
+                            'our_fighter2': False,
                             'page': page_num
                         })
     
-    # Remove duplicate fighters
-    unique_fighters = {}
-    for fighter in club_fighters:
-        if fighter['number'] not in unique_fighters:
-            unique_fighters[fighter['number']] = fighter
-    
-    fighters_list = list(unique_fighters.values())
-    
-    # Filter fights to only those involving our club
-    club_numbers = {f['number'] for f in fighters_list}
-    relevant_fights = []
-    seen_fights = set()
-    
-    for fight in all_fights:
-        f1_num = fight['fighter1']['number']
-        f2_num = fight['fighter2']['number']
-        fight_num = fight['fight_number']
-        
-        # Check if at least one fighter is from our club
-        if f1_num in club_numbers or f2_num in club_numbers:
-            # Avoid duplicates
-            fight_key = fight_num
-            if fight_key not in seen_fights:
-                seen_fights.add(fight_key)
-                fight['our_fighter1'] = f1_num in club_numbers
-                fight['our_fighter2'] = f2_num in club_numbers
-                relevant_fights.append(fight)
+    fighters_list = list(club_fighters.values())
     
     return fighters_list, relevant_fights
 

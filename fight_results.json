@@ -1,0 +1,10 @@
+{
+  "fight_results": {},
+  "comments": {
+    "instructions": "Update fight results by adding entries like: 'fight_number': 'win' or 'loss'",
+    "example": {
+      "141": "win",
+      "235": "loss"
+    }
+  }
+}

@@ -422,12 +422,39 @@
             return result === 'win' || result === 'loss';
         }
 
-        function getFightResult(fight, results, autoLossesByFighter = {}) {
+        function buildFightNumberUsage(fights) {
+            const usage = {};
+            fights.forEach(fight => {
+                const fightNumber = String(fight.fight_number || '').trim();
+                if (!fightNumber) return;
+                usage[fightNumber] = (usage[fightNumber] || 0) + 1;
+            });
+            return usage;
+        }
+
+        function getResultForFight(fight, results, fightNumberUsage = window.currentFightNumberUsage || {}) {
+            const ourFighter = getOurFighter(fight);
+            const fightNumber = String(fight.fight_number || '').trim();
+            const fighterNumberKey = `${ourFighter?.number || ''}:${fightNumber}`;
+            const fighterNameKey = `${ourFighter?.name || ''}:${fightNumber}`;
+
+            if (Object.prototype.hasOwnProperty.call(results, fighterNumberKey)) {
+                return results[fighterNumberKey];
+            }
+            if (Object.prototype.hasOwnProperty.call(results, fighterNameKey)) {
+                return results[fighterNameKey];
+            }
+            if (fightNumberUsage[fightNumber] === 1 && Object.prototype.hasOwnProperty.call(results, fightNumber)) {
+                return results[fightNumber];
+            }
+        }
+
+        function getFightResult(fight, results, autoLossesByFighter = {}, fightNumberUsage = window.currentFightNumberUsage || {}) {
             const fighterName = getOurFighter(fight)?.name;
             if (fighterName && autoLossesByFighter[fighterName]?.[fight.fight_number] === 'loss') {
                 return 'loss';
             }
-            return results[fight.fight_number];
+            return getResultForFight(fight, results, fightNumberUsage);
         }
 
         function buildFightsByFighter(fights) {
@@ -444,14 +471,14 @@
             return fightsByFighter;
         }
 
-        function applyAutoLosses(fights, results) {
+        function applyAutoLosses(fights, results, fightNumberUsage = buildFightNumberUsage(fights)) {
             const autoLossesByFighter = {};
             const fightsByFighter = buildFightsByFighter(fights);
             Object.entries(fightsByFighter).forEach(([fighterName, list]) => {
                 let hasLost = false;
                 list.forEach(fight => {
                     const fightNumber = fight.fight_number;
-                    const result = results[fightNumber];
+                    const result = getResultForFight(fight, results, fightNumberUsage);
                     if (hasLost) {
                         if (!autoLossesByFighter[fighterName]) autoLossesByFighter[fighterName] = {};
                         autoLossesByFighter[fighterName][fightNumber] = 'loss';
@@ -646,7 +673,8 @@
                 window.currentFights = data.fights || [];
                 window.currentFighters = data.fighters || [];
                 window.currentResults = data.results || {};
-                window.currentAutoLosses = applyAutoLosses(window.currentFights, window.currentResults);
+                window.currentFightNumberUsage = buildFightNumberUsage(window.currentFights);
+                window.currentAutoLosses = applyAutoLosses(window.currentFights, window.currentResults, window.currentFightNumberUsage);
                 window.currentPlacements = calculatePlacements(window.currentFights, window.currentResults, window.currentAutoLosses);
                 window.selectedFighter = window.selectedFighter || null;
                 const stats = calculateStats(data.fighters, data.fights, window.currentResults, window.currentAutoLosses);

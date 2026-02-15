@@ -458,14 +458,14 @@
                 if (!list.length) return;
                 const finalFight = list[list.length - 1];
                 if (results[finalFight.fight_number] === 'win') {
-                    placements[fighterName] = '1ère place';
+                    placements[fighterName] = 'Première place';
                     return;
                 }
                 const firstLossIndex = list.findIndex(fight => results[fight.fight_number] === 'loss');
                 if (firstLossIndex === -1) return;
                 const remainingFights = list.length - firstLossIndex;
-                if (remainingFights === 1) placements[fighterName] = '2ème place';
-                if (remainingFights === 2) placements[fighterName] = '3ème place';
+                if (remainingFights === 1) placements[fighterName] = 'Deuxième place';
+                if (remainingFights === 2) placements[fighterName] = 'Troisième place';
             });
             return placements;
         }

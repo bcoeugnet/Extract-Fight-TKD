@@ -218,7 +218,7 @@ def parse_pdf_for_club(pdf_path):
 def main():
     # Note: The PDF filename actually contains two consecutive dots (..)
     # This is the original filename from the competition organizers
-    pdf_path = "Tirages..pdf"
+    pdf_path = "Tirages.pdf"
     
     fighters, fights = parse_pdf_for_club(pdf_path)
     

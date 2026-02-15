@@ -373,11 +373,11 @@
             }
         }
 
-        function calculateStats(fighters, fights, results, autoLossesByFighter = {}) {
+        function calculateStats(fighters, fights, results, autoLossesByFighter = {}, fightNumberUsage = {}) {
             const totalFighters = fighters.length;
             const totalFights = fights.length;
-            const completedFights = fights.filter(fight => isCompletedResult(getFightResult(fight, results, autoLossesByFighter))).length;
-            const wins = fights.filter(fight => getFightResult(fight, results, autoLossesByFighter) === 'win').length;
+            const completedFights = fights.filter(fight => isCompletedResult(getFightResult(fight, results, autoLossesByFighter, fightNumberUsage))).length;
+            const wins = fights.filter(fight => getFightResult(fight, results, autoLossesByFighter, fightNumberUsage) === 'win').length;
             
             return { totalFighters, totalFights, completedFights, wins };
         }
@@ -422,12 +422,41 @@
             return result === 'win' || result === 'loss';
         }
 
-        function getFightResult(fight, results, autoLossesByFighter = {}) {
+        function buildFightNumberUsage(fights) {
+            const usage = {};
+            fights.forEach(fight => {
+                const fightNumber = String(fight.fight_number || '').trim();
+                if (!fightNumber) return;
+                usage[fightNumber] = (usage[fightNumber] || 0) + 1;
+            });
+            return usage;
+        }
+
+        function getResultForFight(fight, results, fightNumberUsage = {}) {
+            const ourFighter = getOurFighter(fight);
+            const fightNumber = String(fight.fight_number || '').trim();
+            const fighterNumber = String(ourFighter?.number || '').trim();
+            const fighterName = String(ourFighter?.name || '').trim();
+            const fighterNumberKey = fighterNumber ? `${fighterNumber}:${fightNumber}` : null;
+            const fighterNameKey = fighterName ? `${fighterName}:${fightNumber}` : null;
+
+            if (fighterNumberKey && Object.prototype.hasOwnProperty.call(results, fighterNumberKey)) {
+                return results[fighterNumberKey];
+            }
+            if (fighterNameKey && Object.prototype.hasOwnProperty.call(results, fighterNameKey)) {
+                return results[fighterNameKey];
+            }
+            if (fightNumberUsage[fightNumber] === 1 && Object.prototype.hasOwnProperty.call(results, fightNumber)) {
+                return results[fightNumber];
+            }
+        }
+
+        function getFightResult(fight, results, autoLossesByFighter = {}, fightNumberUsage = {}) {
             const fighterName = getOurFighter(fight)?.name;
             if (fighterName && autoLossesByFighter[fighterName]?.[fight.fight_number] === 'loss') {
                 return 'loss';
             }
-            return results[fight.fight_number];
+            return getResultForFight(fight, results, fightNumberUsage);
         }
 
         function buildFightsByFighter(fights) {
@@ -444,14 +473,14 @@
             return fightsByFighter;
         }
 
-        function applyAutoLosses(fights, results) {
+        function applyAutoLosses(fights, results, fightNumberUsage = buildFightNumberUsage(fights)) {
             const autoLossesByFighter = {};
             const fightsByFighter = buildFightsByFighter(fights);
             Object.entries(fightsByFighter).forEach(([fighterName, list]) => {
                 let hasLost = false;
                 list.forEach(fight => {
                     const fightNumber = fight.fight_number;
-                    const result = results[fightNumber];
+                    const result = getResultForFight(fight, results, fightNumberUsage);
                     if (hasLost) {
                         if (!autoLossesByFighter[fighterName]) autoLossesByFighter[fighterName] = {};
                         autoLossesByFighter[fighterName][fightNumber] = 'loss';
@@ -465,17 +494,17 @@
             return autoLossesByFighter;
         }
 
-        function calculatePlacements(fights, results, autoLossesByFighter) {
+        function calculatePlacements(fights, results, autoLossesByFighter, fightNumberUsage = {}) {
             const placements = {};
             const fightsByFighter = buildFightsByFighter(fights);
             Object.entries(fightsByFighter).forEach(([fighterName, list]) => {
                 if (!list.length) return;
                 const finalFight = list[list.length - 1];
-                if (getFightResult(finalFight, results, autoLossesByFighter) === 'win') {
+                if (getFightResult(finalFight, results, autoLossesByFighter, fightNumberUsage) === 'win') {
                     placements[fighterName] = 'Première place';
                     return;
                 }
-                const firstLossIndex = list.findIndex(fight => getFightResult(fight, results, autoLossesByFighter) === 'loss');
+                const firstLossIndex = list.findIndex(fight => getFightResult(fight, results, autoLossesByFighter, fightNumberUsage) === 'loss');
                 if (firstLossIndex === -1) return;
                 const remainingFights = list.length - firstLossIndex;
                 if (remainingFights === 1) placements[fighterName] = 'Deuxième place';
@@ -535,6 +564,7 @@
         function renderFights(fights, results, autoLossesByFighter = window.currentAutoLosses || {}) {
             const container = document.getElementById('fights-list');
             const statusFilter = document.getElementById('status-filter').value;
+            const fightNumberUsage = window.currentFightNumberUsage || buildFightNumberUsage(fights);
 
             const baseFights = fights
                 .filter(fight => fight.our_fighter1 || fight.our_fighter2)
@@ -546,7 +576,7 @@
                 .sort((a, b) => parseInt(a.fight_number, 10) - parseInt(b.fight_number, 10));
 
             const visibleFights = baseFights
-                .filter(fight => !(statusFilter === 'pending' && isCompletedResult(getFightResult(fight, results, autoLossesByFighter))))
+                .filter(fight => !(statusFilter === 'pending' && isCompletedResult(getFightResult(fight, results, autoLossesByFighter, fightNumberUsage))))
                 .sort((a, b) => {
                     const sortMode = document.getElementById('sort-mode').value;
                     const areaA = getAreaFromFightNumber(a.fight_number);
@@ -562,7 +592,7 @@
             const fightsByFighter = buildFightsByFighter(baseFights);
 
             container.innerHTML = visibleFights.map(fight => {
-                const result = getFightResult(fight, results, autoLossesByFighter);
+                const result = getFightResult(fight, results, autoLossesByFighter, fightNumberUsage);
                 const hasCompletedResult = isCompletedResult(result);
                 const statusClass = hasCompletedResult ? (result === 'win' ? 'won' : 'lost') : '';
                 const statusText = hasCompletedResult ? (result === 'win' ? '✓ Victoire' : '✗ Défaite') : 'En attente';
@@ -646,10 +676,11 @@
                 window.currentFights = data.fights || [];
                 window.currentFighters = data.fighters || [];
                 window.currentResults = data.results || {};
-                window.currentAutoLosses = applyAutoLosses(window.currentFights, window.currentResults);
-                window.currentPlacements = calculatePlacements(window.currentFights, window.currentResults, window.currentAutoLosses);
+                window.currentFightNumberUsage = buildFightNumberUsage(window.currentFights);
+                window.currentAutoLosses = applyAutoLosses(window.currentFights, window.currentResults, window.currentFightNumberUsage);
+                window.currentPlacements = calculatePlacements(window.currentFights, window.currentResults, window.currentAutoLosses, window.currentFightNumberUsage);
                 window.selectedFighter = window.selectedFighter || null;
-                const stats = calculateStats(data.fighters, data.fights, window.currentResults, window.currentAutoLosses);
+                const stats = calculateStats(data.fighters, data.fights, window.currentResults, window.currentAutoLosses, window.currentFightNumberUsage);
                 
                 renderStats(stats);
                 setupFilters(data.fights);

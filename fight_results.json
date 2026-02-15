@@ -27,10 +27,10 @@
     "665": ""
   },
   "comments": {
-    "instructions": "Update fight results by adding entries like: 'fight_number': 'win' or 'loss'",
+    "instructions": "For duplicate fight numbers, use 'fighterNumber:fightNumber' (preferred) or 'fighterName:fightNumber'; keep plain 'fight_number' only when unique: e.g. '151:157': 'loss'",
     "example": {
       "141": "win",
-      "235": "loss"
+      "151:157": "loss"
     }
   }
 }

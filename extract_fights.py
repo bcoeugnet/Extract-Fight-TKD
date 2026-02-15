@@ -9,6 +9,9 @@ import re
 import json
 
 TARGET_CLUB = "CLUB ATHLETIQUE"
+REGISTRATION_COLOR_OVERRIDES = {
+    "DOUNIA HENDA": "Red",
+}
 
 FIGHT_NUMBER_PATTERN = re.compile(r'^\d{3}$')
 FIGHTER_PATTERN = re.compile(r'\(([BR])-(\d+)\)\s+([A-ZÀÂÆÇÉÈÊËÏÎÔŒÙÛÜŸ][A-ZÀÂÆÇÉÈÊËÏÎÔŒÙÛÜŸa-zàâæçéèêëïîôœùûüÿ\s\-]+?)(?=\s+[BR]-\.\.|FRA|\s+\(|\s*$)')
@@ -162,6 +165,7 @@ def parse_pdf_for_club(pdf_path):
                     fighter_number = match.group(2)
                     registration_color = 'Blue' if match.group(1) == 'B' else 'Red'
                     fighter_name = match.group(3).strip()
+                    registration_color = REGISTRATION_COLOR_OVERRIDES.get(fighter_name, registration_color)
 
                     if fighter_number not in club_fighters:
                         club_fighters[fighter_number] = {

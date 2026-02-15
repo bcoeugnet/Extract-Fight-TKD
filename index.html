@@ -234,6 +234,11 @@
             color: white;
             font-weight: bold;
         }
+
+        .fighter-round {
+            margin-left: 8px;
+            font-size: 0.9em;
+        }
         
         .vs {
             font-size: 1.5em;
@@ -368,11 +373,11 @@
             }
         }
 
-        function calculateStats(fighters, fights, results) {
+        function calculateStats(fighters, fights, results, autoLossesByFighter = {}) {
             const totalFighters = fighters.length;
             const totalFights = fights.length;
-            const completedFights = Object.values(results).filter(isCompletedResult).length;
-            const wins = Object.values(results).filter(r => r === 'win').length;
+            const completedFights = fights.filter(fight => isCompletedResult(getFightResult(fight, results, autoLossesByFighter))).length;
+            const wins = fights.filter(fight => getFightResult(fight, results, autoLossesByFighter) === 'win').length;
             
             return { totalFighters, totalFights, completedFights, wins };
         }
@@ -417,6 +422,14 @@
             return result === 'win' || result === 'loss';
         }
 
+        function getFightResult(fight, results, autoLossesByFighter = {}) {
+            const fighterName = getOurFighter(fight)?.name;
+            if (fighterName && autoLossesByFighter[fighterName]?.[fight.fight_number] === 'loss') {
+                return 'loss';
+            }
+            return results[fight.fight_number];
+        }
+
         function buildFightsByFighter(fights) {
             const fightsByFighter = {};
             fights.forEach(fight => {
@@ -432,15 +445,16 @@
         }
 
         function applyAutoLosses(fights, results) {
-            const updatedResults = { ...results };
+            const autoLossesByFighter = {};
             const fightsByFighter = buildFightsByFighter(fights);
-            Object.values(fightsByFighter).forEach(list => {
+            Object.entries(fightsByFighter).forEach(([fighterName, list]) => {
                 let hasLost = false;
                 list.forEach(fight => {
                     const fightNumber = fight.fight_number;
-                    const result = updatedResults[fightNumber];
+                    const result = results[fightNumber];
                     if (hasLost) {
-                        if (result !== 'loss') updatedResults[fightNumber] = 'loss';
+                        if (!autoLossesByFighter[fighterName]) autoLossesByFighter[fighterName] = {};
+                        autoLossesByFighter[fighterName][fightNumber] = 'loss';
                         return;
                     }
                     if (result === 'loss') {
@@ -448,20 +462,20 @@
                     }
                 });
             });
-            return updatedResults;
+            return autoLossesByFighter;
         }
 
-        function calculatePlacements(fights, results) {
+        function calculatePlacements(fights, results, autoLossesByFighter) {
             const placements = {};
             const fightsByFighter = buildFightsByFighter(fights);
             Object.entries(fightsByFighter).forEach(([fighterName, list]) => {
                 if (!list.length) return;
                 const finalFight = list[list.length - 1];
-                if (results[finalFight.fight_number] === 'win') {
+                if (getFightResult(finalFight, results, autoLossesByFighter) === 'win') {
                     placements[fighterName] = 'Première place';
                     return;
                 }
-                const firstLossIndex = list.findIndex(fight => results[fight.fight_number] === 'loss');
+                const firstLossIndex = list.findIndex(fight => getFightResult(fight, results, autoLossesByFighter) === 'loss');
                 if (firstLossIndex === -1) return;
                 const remainingFights = list.length - firstLossIndex;
                 if (remainingFights === 1) placements[fighterName] = 'Deuxième place';
@@ -518,7 +532,7 @@
             return `Tour ${remainingFights}`;
         }
 
-        function renderFights(fights, results) {
+        function renderFights(fights, results, autoLossesByFighter = window.currentAutoLosses || {}) {
             const container = document.getElementById('fights-list');
             const statusFilter = document.getElementById('status-filter').value;
 
@@ -532,7 +546,7 @@
                 .sort((a, b) => parseInt(a.fight_number, 10) - parseInt(b.fight_number, 10));
 
             const visibleFights = baseFights
-                .filter(fight => !(statusFilter === 'pending' && isCompletedResult(results[fight.fight_number])))
+                .filter(fight => !(statusFilter === 'pending' && isCompletedResult(getFightResult(fight, results, autoLossesByFighter))))
                 .sort((a, b) => {
                     const sortMode = document.getElementById('sort-mode').value;
                     const areaA = getAreaFromFightNumber(a.fight_number);
@@ -548,7 +562,7 @@
             const fightsByFighter = buildFightsByFighter(baseFights);
 
             container.innerHTML = visibleFights.map(fight => {
-                const result = results[fight.fight_number];
+                const result = getFightResult(fight, results, autoLossesByFighter);
                 const hasCompletedResult = isCompletedResult(result);
                 const statusClass = hasCompletedResult ? (result === 'win' ? 'won' : 'lost') : '';
                 const statusText = hasCompletedResult ? (result === 'win' ? '✓ Victoire' : '✗ Défaite') : 'En attente';
@@ -569,8 +583,7 @@
                         </div>
                         <div class="fight-matchup">
                             <div class="fighter-info ${ourFighter.registration_color.toLowerCase()} our-fighter">
-                                <div>★ ${ourFighter.name}</div>
-                                <div style="margin-top: 5px; font-size: 0.9em;">${getRoundLabel(remainingFights)}</div>
+                                <div>★ ${ourFighter.name}<span class="fighter-round">${getRoundLabel(remainingFights)}</span></div>
                             </div>
                         </div>
                     </div>
@@ -632,10 +645,11 @@
                 const data = await loadData();
                 window.currentFights = data.fights || [];
                 window.currentFighters = data.fighters || [];
-                window.currentResults = applyAutoLosses(window.currentFights, data.results || {});
-                window.currentPlacements = calculatePlacements(window.currentFights, window.currentResults);
+                window.currentResults = data.results || {};
+                window.currentAutoLosses = applyAutoLosses(window.currentFights, window.currentResults);
+                window.currentPlacements = calculatePlacements(window.currentFights, window.currentResults, window.currentAutoLosses);
                 window.selectedFighter = window.selectedFighter || null;
-                const stats = calculateStats(data.fighters, data.fights, window.currentResults);
+                const stats = calculateStats(data.fighters, data.fights, window.currentResults, window.currentAutoLosses);
                 
                 renderStats(stats);
                 setupFilters(data.fights);

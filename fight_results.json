@@ -27,7 +27,7 @@
     "665": ""
   },
   "comments": {
-    "instructions": "Use 'fighterNumber:fightNumber' for duplicate fight numbers (or plain 'fight_number' when unique): e.g. '151:157': 'loss'",
+    "instructions": "For duplicate fight numbers, use 'fighterNumber:fightNumber' (preferred) or 'fighterName:fightNumber'; keep plain 'fight_number' only when unique: e.g. '151:157': 'loss'",
     "example": {
       "141": "win",
       "151:157": "loss"

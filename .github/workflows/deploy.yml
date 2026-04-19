@@ -6,6 +6,8 @@ on:
       - main
     paths:
       - 'fight_results.json'
+      - 'TiragesV1-D2.pdf'
+      - 'Tirages.pdf'
       - 'Tirages..pdf'
       - 'index.html'
       - 'extract_fights.py'

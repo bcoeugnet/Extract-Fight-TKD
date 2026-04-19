@@ -7,6 +7,7 @@ Accurately extracts fighters and fights for CLUB ATHLETIQUE
 import pdfplumber
 import re
 import json
+from pathlib import Path
 
 TARGET_CLUB = "CLUB ATHLETIQUE"
 REGISTRATION_COLOR_OVERRIDES = {
@@ -23,6 +24,11 @@ FIGHT_TRANSITION_X_OFFSET = 12
 CENTER_TRANSITION_MARGIN = 45
 MAX_VERTICAL_FIGHT_MATCH_DISTANCE = 120
 MAX_BRACKET_DEPTH = 8
+PDF_CANDIDATES = [
+    "TiragesV1-D2.pdf",
+    "Tirages.pdf",
+    "Tirages..pdf",  # Legacy organizer filename used in earlier competition files
+]
 
 
 def _find_nearest_color_marker(markers, x, top):
@@ -219,12 +225,20 @@ def parse_pdf_for_club(pdf_path):
     return fighters_list, relevant_fights
 
 
+def resolve_pdf_path():
+    for candidate in PDF_CANDIDATES:
+        if Path(candidate).is_file():
+            return candidate
+    raise FileNotFoundError(
+        f"No supported tirage PDF found. Expected one of: {', '.join(PDF_CANDIDATES)}"
+    )
+
+
 def main():
-    # Note: The PDF filename actually contains two consecutive dots (..)
-    # This is the original filename from the competition organizers
-    pdf_path = "Tirages.pdf"
+    pdf_path = resolve_pdf_path()
     
     fighters, fights = parse_pdf_for_club(pdf_path)
+    print(f"Using PDF: {pdf_path}\n")
     
     print(f"Found {len(fighters)} fighters from {TARGET_CLUB}\n")
     

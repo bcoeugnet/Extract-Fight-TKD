@@ -2,6 +2,12 @@
   "club": "CLUB ATHLETIQUE",
   "fighters": [
     {
+      "name": "CHERINE FAKKOUL",
+      "number": "362",
+      "registration_color": "Blue",
+      "page": 5
+    },
+    {
       "name": "RITEDJ SALEMKOUR",
       "number": "368",
       "registration_color": "Red",
@@ -18,6 +24,12 @@
       "number": "363",
       "registration_color": "Red",
       "page": 10
+    },
+    {
+      "name": "MALIK NACTO GBOSSOU",
+      "number": "353",
+      "registration_color": "Blue",
+      "page": 11
     },
     {
       "name": "EVA PENLOUP",
@@ -57,6 +69,70 @@
     }
   ],
   "fights": [
+    {
+      "fight_number": "502",
+      "fighter1": {
+        "name": "CHERINE FAKKOUL",
+        "number": "362",
+        "registration_color": "Blue"
+      },
+      "fighter2": {
+        "name": "À déterminer",
+        "number": "",
+        "registration_color": ""
+      },
+      "our_fighter1": true,
+      "our_fighter2": false,
+      "page": 5
+    },
+    {
+      "fight_number": "523",
+      "fighter1": {
+        "name": "CHERINE FAKKOUL",
+        "number": "362",
+        "registration_color": "Blue"
+      },
+      "fighter2": {
+        "name": "À déterminer",
+        "number": "",
+        "registration_color": ""
+      },
+      "our_fighter1": true,
+      "our_fighter2": false,
+      "page": 5
+    },
+    {
+      "fight_number": "550",
+      "fighter1": {
+        "name": "CHERINE FAKKOUL",
+        "number": "362",
+        "registration_color": "Blue"
+      },
+      "fighter2": {
+        "name": "À déterminer",
+        "number": "",
+        "registration_color": ""
+      },
+      "our_fighter1": true,
+      "our_fighter2": false,
+      "page": 5
+    },
+    {
+      "fight_number": "568",
+      "fighter1": {
+        "name": "CHERINE FAKKOUL",
+        "number": "362",
+        "registration_color": "Blue"
+      },
+      "fighter2": {
+        "name": "À déterminer",
+        "number": "",
+        "registration_color": ""
+      },
+      "our_fighter1": true,
+      "our_fighter2": false,
+      "page": 5
+    },
     {
       "fight_number": "526",
       "fighter1": {
@@ -232,6 +308,54 @@
       "our_fighter1": true,
       "our_fighter2": false,
       "page": 10
+    },
+    {
+      "fight_number": "222",
+      "fighter1": {
+        "name": "MALIK NACTO GBOSSOU",
+        "number": "353",
+        "registration_color": "Blue"
+      },
+      "fighter2": {
+        "name": "À déterminer",
+        "number": "",
+        "registration_color": ""
+      },
+      "our_fighter1": true,
+      "our_fighter2": false,
+      "page": 11
+    },
+    {
+      "fight_number": "242",
+      "fighter1": {
+        "name": "MALIK NACTO GBOSSOU",
+        "number": "353",
+        "registration_color": "Red"
+      },
+      "fighter2": {
+        "name": "À déterminer",
+        "number": "",
+        "registration_color": ""
+      },
+      "our_fighter1": true,
+      "our_fighter2": false,
+      "page": 11
+    },
+    {
+      "fight_number": "253",
+      "fighter1": {
+        "name": "MALIK NACTO GBOSSOU",
+        "number": "353",
+        "registration_color": "Red"
+      },
+      "fighter2": {
+        "name": "À déterminer",
+        "number": "",
+        "registration_color": ""
+      },
+      "our_fighter1": true,
+      "our_fighter2": false,
+      "page": 11
     },
     {
       "fight_number": "425",

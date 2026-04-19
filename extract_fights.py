@@ -166,6 +166,10 @@ def parse_pdf_for_club(pdf_path):
                     
                     if our_fighter_idx < len(fighter_matches):
                         selected_matches = [fighter_matches[our_fighter_idx]]
+                elif club_count == 1 and len(fighter_matches) == 1:
+                    # Some bracket rows contain a single fighter and one club line.
+                    # In this case, that fighter belongs to CLUB ATHLETIQUE.
+                    selected_matches = fighter_matches
 
                 for match in selected_matches:
                     fighter_number = match.group(2)

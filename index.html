@@ -364,10 +364,12 @@
         function mergeFightData(baseData = {}, manualData = {}) {
             const fightersMap = new Map();
             (baseData.fighters || []).forEach(fighter => fightersMap.set(buildFighterKey(fighter), fighter));
+            // Manual entries intentionally override generated entries with the same fighter key.
             (manualData.fighters || []).forEach(fighter => fightersMap.set(buildFighterKey(fighter), fighter));
 
             const fightsMap = new Map();
             (baseData.fights || []).forEach(fight => fightsMap.set(buildFightKey(fight), fight));
+            // Manual entries intentionally override generated entries with the same fight key.
             (manualData.fights || []).forEach(fight => fightsMap.set(buildFightKey(fight), fight));
 
             return {
@@ -377,14 +379,18 @@
         }
 
         async function loadOptionalJson(path) {
-            const response = await fetch(path);
-            if (response.ok) {
-                return response.json();
+            try {
+                const response = await fetch(path);
+                if (response.ok) {
+                    return response.json();
+                }
+                if (response.status === 404) {
+                    return null;
+                }
+                throw new Error(`Failed to load ${path}`);
+            } catch (error) {
+                throw new Error(`Failed to load ${path}: ${error.message}`);
             }
-            if (response.status === 404) {
-                return null;
-            }
-            throw new Error(`Failed to load ${path}`);
         }
 
         // Load fight data

@@ -347,30 +347,34 @@
     </div>
 
     <script>
-        function buildFighterKey(fighter) {
+        function buildFighterKey(fighter, fallbackId = '') {
             const fighterNumber = String(fighter?.number || '').trim();
             if (fighterNumber) return `number:${fighterNumber}`;
-            return `name:${String(fighter?.name || '').trim().toUpperCase()}`;
+            const fighterName = String(fighter?.name || '').trim().toUpperCase();
+            if (fighterName) return `name:${fighterName}`;
+            return `unknown-fighter:${fallbackId}`;
         }
 
-        function buildFightKey(fight) {
+        function buildFightKey(fight, fallbackId = '') {
             const fightNumber = String(fight?.fight_number || '').trim();
             const ourFighter = getOurFighter(fight);
             const fighterNumber = String(ourFighter?.number || '').trim();
             if (fighterNumber) return `${fighterNumber}:${fightNumber}`;
-            return `${String(ourFighter?.name || '').trim().toUpperCase()}:${fightNumber}`;
+            const fighterName = String(ourFighter?.name || '').trim().toUpperCase();
+            if (fighterName || fightNumber) return `${fighterName}:${fightNumber}`;
+            return `unknown-fight:${fallbackId}`;
         }
 
         function mergeFightData(baseData = {}, manualData = {}) {
             const fightersMap = new Map();
-            (baseData.fighters || []).forEach(fighter => fightersMap.set(buildFighterKey(fighter), fighter));
+            (baseData.fighters || []).forEach((fighter, index) => fightersMap.set(buildFighterKey(fighter, `base-${index}`), fighter));
             // Manual entries intentionally override generated entries with the same fighter key.
-            (manualData.fighters || []).forEach(fighter => fightersMap.set(buildFighterKey(fighter), fighter));
+            (manualData.fighters || []).forEach((fighter, index) => fightersMap.set(buildFighterKey(fighter, `manual-${index}`), fighter));
 
             const fightsMap = new Map();
-            (baseData.fights || []).forEach(fight => fightsMap.set(buildFightKey(fight), fight));
+            (baseData.fights || []).forEach((fight, index) => fightsMap.set(buildFightKey(fight, `base-${index}`), fight));
             // Manual entries intentionally override generated entries with the same fight key.
-            (manualData.fights || []).forEach(fight => fightsMap.set(buildFightKey(fight), fight));
+            (manualData.fights || []).forEach((fight, index) => fightsMap.set(buildFightKey(fight, `manual-${index}`), fight));
 
             return {
                 fighters: Array.from(fightersMap.values()),
@@ -387,7 +391,7 @@
                 if (response.status === 404) {
                     return null;
                 }
-                throw new Error(`Failed to load ${path}`);
+                throw new Error(`Failed to load ${path}: HTTP ${response.status}`);
             } catch (error) {
                 throw new Error(`Failed to load ${path}: ${error.message}`);
             }

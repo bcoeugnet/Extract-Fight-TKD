@@ -10,7 +10,8 @@
 "425": "loss",
 "429": "win",
 "330": "loss",
-"526": "win"
+"526": "win",
+"238": "win"
   },
   "comments": {
     "instructions": "For duplicate fight numbers, use 'fighterNumber:fightNumber' (preferred) or 'fighterName:fightNumber'; keep plain 'fight_number' only when unique: e.g. '151:157': 'loss'",

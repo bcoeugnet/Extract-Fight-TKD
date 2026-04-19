@@ -14,9 +14,10 @@ REGISTRATION_COLOR_OVERRIDES = {
     "DOUNIA HENDA": "Red",
 }
 
-FIGHT_NUMBER_PATTERN = re.compile(r'^\d{3}$')
+FIGHT_NUMBER_PATTERN = re.compile(r'^\d{3}(?:\.\d+)?$')
 FIGHTER_PATTERN = re.compile(r'\(([BR])-(\d+)\)\s+([A-ZÀÂÆÇÉÈÊËÏÎÔŒÙÛÜŸ][A-ZÀÂÆÇÉÈÊËÏÎÔŒÙÛÜŸa-zàâæçéèêëïîôœùûüÿ\s\-]+?)(?=\s+[BR]-\.\.|FRA|\s+\(|\s*$)')
 PLACEHOLDER_COLORS = {"B-........": "Blue", "R-........": "Red"}
+EXCLUDED_FIGHTER_NAMES = {"EVAN NOUBARA", "MAILANN NACTO GBOSSOU"}
 MAX_COLOR_MARKER_VERTICAL_DISTANCE = 22
 MAX_COLOR_MARKER_HORIZONTAL_DISTANCE = 70
 COLOR_MARKER_HORIZONTAL_WEIGHT = 0.35
@@ -29,6 +30,17 @@ PDF_CANDIDATES = [
     "Tirages.pdf",
     "Tirages..pdf",  # Legacy organizer filename used in earlier competition files
 ]
+
+
+def _fight_sort_key(fight_number):
+    text = str(fight_number).strip()
+    if '.' in text:
+        major, minor = text.split('.', 1)
+        if major.isdigit() and minor.isdigit():
+            return int(major), int(minor), text
+    if text.isdigit():
+        return int(text), 0, text
+    return float('inf'), float('inf'), text
 
 
 def _find_nearest_color_marker(markers, x, top):
@@ -175,6 +187,8 @@ def parse_pdf_for_club(pdf_path):
                     fighter_number = match.group(2)
                     registration_color = 'Blue' if match.group(1) == 'B' else 'Red'
                     fighter_name = match.group(3).strip()
+                    if fighter_name in EXCLUDED_FIGHTER_NAMES:
+                        continue
                     registration_color = REGISTRATION_COLOR_OVERRIDES.get(fighter_name, registration_color)
 
                     if fighter_number not in club_fighters:
@@ -253,7 +267,7 @@ def main():
     print(f"\nFound {len(fights)} fights involving these fighters\n")
     
     print("Fights:")
-    for fight in sorted(fights, key=lambda x: int(x['fight_number'])):
+    for fight in sorted(fights, key=lambda x: _fight_sort_key(x['fight_number'])):
         f1 = fight['fighter1']
         f2 = fight['fighter2']
         marker1 = "★" if fight['our_fighter1'] else " "

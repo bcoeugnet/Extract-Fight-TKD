@@ -88,6 +88,15 @@
         .fighter-card.active {
             outline: 3px solid #667eea;
         }
+
+        .fighter-card.eliminated {
+            opacity: 0.8;
+        }
+
+        .fighter-card.eliminated .fighter-name {
+            text-decoration: line-through;
+            text-decoration-thickness: 2px;
+        }
         
         .fighter-header {
             display: flex;
@@ -116,6 +125,17 @@
             font-size: 0.85em;
             font-weight: bold;
             color: #1e3c72;
+        }
+
+        .fighter-status {
+            margin-top: 6px;
+            font-size: 0.85em;
+            font-weight: bold;
+            color: #2e7d32;
+        }
+
+        .fighter-status.eliminated {
+            color: #b71c1c;
         }
 
         .fights-controls {
@@ -319,6 +339,13 @@
                 
                 <div class="section">
                     <h2>👥 Nos Combattants</h2>
+                    <div class="fights-controls">
+                        <select id="fighter-sort-mode">
+                            <option value="area">Tri par aire puis nom</option>
+                            <option value="active-first">En lice d'abord puis éliminés</option>
+                            <option value="eliminated-first">Éliminés d'abord puis en lice</option>
+                        </select>
+                    </div>
                     <div class="fighters-grid" id="fighters-grid"></div>
                 </div>
                 
@@ -566,8 +593,29 @@
             return placements;
         }
 
+        function buildFighterEliminationStatus(fighters, fights, results, autoLossesByFighter = {}, fightNumberUsage = {}) {
+            const eliminatedByFighter = {};
+            (fighters || []).forEach(fighter => {
+                if (fighter?.name) eliminatedByFighter[fighter.name] = false;
+            });
+            const fightsByFighter = buildFightsByFighter(fights);
+            Object.entries(fightsByFighter).forEach(([fighterName, list]) => {
+                eliminatedByFighter[fighterName] = list.some(
+                    fight => getFightResult(fight, results, autoLossesByFighter, fightNumberUsage) === 'loss'
+                );
+            });
+            return eliminatedByFighter;
+        }
+
+        function getFighterStatusSortValue(isEliminated, fighterSortMode) {
+            if (fighterSortMode === 'active-first') return isEliminated ? 1 : 0;
+            if (fighterSortMode === 'eliminated-first') return isEliminated ? 0 : 1;
+            return 0;
+        }
+
         function renderFighters(fighters) {
             const container = document.getElementById('fighters-grid');
+            const fighterSortMode = document.getElementById('fighter-sort-mode')?.value || 'area';
             const areaByFighter = {};
             window.currentFights.forEach(fight => {
                 const fighterName = getOurFighter(fight)?.name;
@@ -577,18 +625,26 @@
                     areaByFighter[fighterName] = area;
                 }
             });
+            const eliminatedByFighter = window.currentFighterEliminated || {};
 
             const sortedFighters = [...fighters].sort((a, b) => {
+                const eliminatedA = Boolean(eliminatedByFighter[a.name]);
+                const eliminatedB = Boolean(eliminatedByFighter[b.name]);
                 const areaA = areaByFighter[a.name] || 99;
                 const areaB = areaByFighter[b.name] || 99;
-                return areaA - areaB || a.name.localeCompare(b.name);
+                const statusSortA = getFighterStatusSortValue(eliminatedA, fighterSortMode);
+                const statusSortB = getFighterStatusSortValue(eliminatedB, fighterSortMode);
+                return statusSortA - statusSortB || areaA - areaB || a.name.localeCompare(b.name);
             });
 
             container.innerHTML = sortedFighters.map(fighter => `
-                <button class="fighter-card ${window.selectedFighter === fighter.name ? 'active' : ''}" data-fighter-name="${fighter.name}">
+                <button class="fighter-card ${window.selectedFighter === fighter.name ? 'active' : ''} ${eliminatedByFighter[fighter.name] ? 'eliminated' : ''}" data-fighter-name="${fighter.name}">
                     <div class="fighter-header">
                         <span class="fighter-name">${fighter.name}</span>
                         <span class="fighter-area">Aire ${areaByFighter[fighter.name] || '-'}</span>
+                    </div>
+                    <div class="fighter-status ${eliminatedByFighter[fighter.name] ? 'eliminated' : ''}">
+                        ${eliminatedByFighter[fighter.name] ? 'Éliminé (au moins une défaite)' : 'En lice'}
                     </div>
                     ${window.currentPlacements[fighter.name] ? `<div class="fighter-placement">Classement: ${window.currentPlacements[fighter.name]}</div>` : ''}
                 </button>
@@ -688,10 +744,12 @@
             const areaFilter = document.getElementById('area-filter');
             const statusFilter = document.getElementById('status-filter');
             const sortMode = document.getElementById('sort-mode');
+            const fighterSortMode = document.getElementById('fighter-sort-mode');
             const clearFighterFilter = document.getElementById('clear-fighter-filter');
             const selectedArea = areaFilter.value || 'all';
             const selectedStatus = statusFilter.value || 'all';
             const selectedSortMode = sortMode.value || 'area';
+            const selectedFighterSortMode = fighterSortMode?.value || 'area';
 
             const areas = [...new Set(fights
                 .filter(fight => fight.our_fighter1 || fight.our_fighter2)
@@ -708,11 +766,13 @@
                 : (areas.includes(Number(selectedArea)) ? selectedArea : 'all');
             statusFilter.value = selectedStatus;
             sortMode.value = selectedSortMode;
+            if (fighterSortMode) fighterSortMode.value = selectedFighterSortMode;
 
             if (!window.filtersInitialized) {
                 areaFilter.addEventListener('change', () => renderFights(window.currentFights, window.currentResults));
                 statusFilter.addEventListener('change', () => renderFights(window.currentFights, window.currentResults));
                 sortMode.addEventListener('change', () => renderFights(window.currentFights, window.currentResults));
+                if (fighterSortMode) fighterSortMode.addEventListener('change', () => renderFighters(window.currentFighters));
                 clearFighterFilter.addEventListener('click', () => {
                     window.selectedFighter = null;
                     updateFighterFilterButton();
@@ -731,6 +791,7 @@
                 window.currentResults = data.results || {};
                 window.currentFightNumberUsage = buildFightNumberUsage(window.currentFights);
                 window.currentAutoLosses = applyAutoLosses(window.currentFights, window.currentResults, window.currentFightNumberUsage);
+                window.currentFighterEliminated = buildFighterEliminationStatus(window.currentFighters, window.currentFights, window.currentResults, window.currentAutoLosses, window.currentFightNumberUsage);
                 window.currentPlacements = calculatePlacements(window.currentFights, window.currentResults, window.currentAutoLosses, window.currentFightNumberUsage);
                 window.selectedFighter = window.selectedFighter || null;
                 const stats = calculateStats(data.fighters, data.fights, window.currentResults, window.currentAutoLosses, window.currentFightNumberUsage);

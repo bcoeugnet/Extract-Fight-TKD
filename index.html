@@ -347,24 +347,67 @@
     </div>
 
     <script>
+        function buildFighterKey(fighter) {
+            const fighterNumber = String(fighter?.number || '').trim();
+            if (fighterNumber) return `number:${fighterNumber}`;
+            return `name:${String(fighter?.name || '').trim().toUpperCase()}`;
+        }
+
+        function buildFightKey(fight) {
+            const fightNumber = String(fight?.fight_number || '').trim();
+            const ourFighter = getOurFighter(fight);
+            const fighterNumber = String(ourFighter?.number || '').trim();
+            if (fighterNumber) return `${fighterNumber}:${fightNumber}`;
+            return `${String(ourFighter?.name || '').trim().toUpperCase()}:${fightNumber}`;
+        }
+
+        function mergeFightData(baseData = {}, manualData = {}) {
+            const fightersMap = new Map();
+            (baseData.fighters || []).forEach(fighter => fightersMap.set(buildFighterKey(fighter), fighter));
+            (manualData.fighters || []).forEach(fighter => fightersMap.set(buildFighterKey(fighter), fighter));
+
+            const fightsMap = new Map();
+            (baseData.fights || []).forEach(fight => fightsMap.set(buildFightKey(fight), fight));
+            (manualData.fights || []).forEach(fight => fightsMap.set(buildFightKey(fight), fight));
+
+            return {
+                fighters: Array.from(fightersMap.values()),
+                fights: Array.from(fightsMap.values())
+            };
+        }
+
+        async function loadOptionalJson(path) {
+            const response = await fetch(path);
+            if (response.ok) {
+                return response.json();
+            }
+            if (response.status === 404) {
+                return null;
+            }
+            throw new Error(`Failed to load ${path}`);
+        }
+
         // Load fight data
         async function loadData() {
             try {
-                const [fightDataResponse, resultsResponse] = await Promise.all([
-                    fetch('fight_data.json'),
+                const [fightData, manualFightData, resultsResponse] = await Promise.all([
+                    loadOptionalJson('fight_data.json'),
+                    loadOptionalJson('fight.json'),
                     fetch('fight_results.json')
                 ]);
                 
-                if (!fightDataResponse.ok || !resultsResponse.ok) {
+                if (!resultsResponse.ok) {
                     throw new Error('Failed to load data files');
                 }
-                
-                const fightData = await fightDataResponse.json();
+                if (!fightData && !manualFightData) {
+                    throw new Error('Failed to load fight data files');
+                }
                 const resultsData = await resultsResponse.json();
+                const mergedFightData = mergeFightData(fightData || {}, manualFightData || {});
                 
                 return {
-                    fighters: fightData.fighters,
-                    fights: fightData.fights,
+                    fighters: mergedFightData.fighters,
+                    fights: mergedFightData.fights,
                     results: resultsData.fight_results || {}
                 };
             } catch (error) {

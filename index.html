@@ -410,7 +410,7 @@
                     throw new Error('Failed to load data files');
                 }
                 if (!fightData && !manualFightData) {
-                    throw new Error('Failed to load fight data files');
+                    throw new Error('No fight data available: both fight_data.json and fight.json are missing or failed to load');
                 }
                 const resultsData = await resultsResponse.json();
                 const mergedFightData = mergeFightData(fightData || {}, manualFightData || {});

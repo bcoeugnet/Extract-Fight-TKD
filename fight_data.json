@@ -654,6 +654,86 @@
       "our_fighter1": true,
       "our_fighter2": false,
       "page": 41
+    },
+    {
+      "fight_number": "501.1",
+      "fighter1": {
+        "name": "MOHAMMED MECHACHA",
+        "number": "358",
+        "registration_color": "Red"
+      },
+      "fighter2": {
+        "name": "À déterminer",
+        "number": "",
+        "registration_color": ""
+      },
+      "our_fighter1": true,
+      "our_fighter2": false,
+      "page": 41
+    },
+      {
+      "fight_number": "429",
+      "fighter1": {
+        "name": "MOHAMMED MECHACHA",
+        "number": "358",
+        "registration_color": "Blue"
+      },
+      "fighter2": {
+        "name": "À déterminer",
+        "number": "",
+        "registration_color": ""
+      },
+      "our_fighter1": true,
+      "our_fighter2": false,
+      "page": 41
+      },
+        {
+      "fight_number": "453",
+      "fighter1": {
+        "name": "MOHAMMED MECHACHA",
+        "number": "358",
+        "registration_color": "Blue"
+      },
+      "fighter2": {
+        "name": "À déterminer",
+        "number": "",
+        "registration_color": ""
+      },
+      "our_fighter1": true,
+      "our_fighter2": false,
+      "page": 41
+    },
+        {
+      "fight_number": "556",
+      "fighter1": {
+        "name": "MOHAMMED MECHACHA",
+        "number": "358",
+        "registration_color": "Red"
+      },
+      "fighter2": {
+        "name": "À déterminer",
+        "number": "",
+        "registration_color": ""
+      },
+      "our_fighter1": true,
+      "our_fighter2": false,
+      "page": 41
+    },
+        {
+      "fight_number": "571",
+      "fighter1": {
+        "name": "MOHAMMED MECHACHA",
+        "number": "358",
+        "registration_color": "Blue"
+      },
+      "fighter2": {
+        "name": "À déterminer",
+        "number": "",
+        "registration_color": ""
+      },
+      "our_fighter1": true,
+      "our_fighter2": false,
+      "page": 41
     }
   ]
 }

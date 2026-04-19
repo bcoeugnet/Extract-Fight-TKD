@@ -593,8 +593,11 @@
             return placements;
         }
 
-        function buildFighterEliminationStatus(fights, results, autoLossesByFighter = {}, fightNumberUsage = {}) {
+        function buildFighterEliminationStatus(fighters, fights, results, autoLossesByFighter = {}, fightNumberUsage = {}) {
             const eliminatedByFighter = {};
+            (fighters || []).forEach(fighter => {
+                if (fighter?.name) eliminatedByFighter[fighter.name] = false;
+            });
             const fightsByFighter = buildFightsByFighter(fights);
             Object.entries(fightsByFighter).forEach(([fighterName, list]) => {
                 eliminatedByFighter[fighterName] = list.some(
@@ -602,6 +605,12 @@
                 );
             });
             return eliminatedByFighter;
+        }
+
+        function getFighterStatusSortValue(isEliminated, fighterSortMode) {
+            if (fighterSortMode === 'active-first') return isEliminated ? 1 : 0;
+            if (fighterSortMode === 'eliminated-first') return isEliminated ? 0 : 1;
+            return 0;
         }
 
         function renderFighters(fighters) {
@@ -623,17 +632,9 @@
                 const eliminatedB = Boolean(eliminatedByFighter[b.name]);
                 const areaA = areaByFighter[a.name] || 99;
                 const areaB = areaByFighter[b.name] || 99;
-                if (fighterSortMode === 'active-first') {
-                    return (eliminatedA ? 1 : 0) - (eliminatedB ? 1 : 0)
-                        || areaA - areaB
-                        || a.name.localeCompare(b.name);
-                }
-                if (fighterSortMode === 'eliminated-first') {
-                    return (eliminatedB ? 1 : 0) - (eliminatedA ? 1 : 0)
-                        || areaA - areaB
-                        || a.name.localeCompare(b.name);
-                }
-                return areaA - areaB || a.name.localeCompare(b.name);
+                const statusSortA = getFighterStatusSortValue(eliminatedA, fighterSortMode);
+                const statusSortB = getFighterStatusSortValue(eliminatedB, fighterSortMode);
+                return statusSortA - statusSortB || areaA - areaB || a.name.localeCompare(b.name);
             });
 
             container.innerHTML = sortedFighters.map(fighter => `
@@ -790,7 +791,7 @@
                 window.currentResults = data.results || {};
                 window.currentFightNumberUsage = buildFightNumberUsage(window.currentFights);
                 window.currentAutoLosses = applyAutoLosses(window.currentFights, window.currentResults, window.currentFightNumberUsage);
-                window.currentFighterEliminated = buildFighterEliminationStatus(window.currentFights, window.currentResults, window.currentAutoLosses, window.currentFightNumberUsage);
+                window.currentFighterEliminated = buildFighterEliminationStatus(window.currentFighters, window.currentFights, window.currentResults, window.currentAutoLosses, window.currentFightNumberUsage);
                 window.currentPlacements = calculatePlacements(window.currentFights, window.currentResults, window.currentAutoLosses, window.currentFightNumberUsage);
                 window.selectedFighter = window.selectedFighter || null;
                 const stats = calculateStats(data.fighters, data.fights, window.currentResults, window.currentAutoLosses, window.currentFightNumberUsage);

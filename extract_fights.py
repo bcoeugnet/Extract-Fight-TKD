@@ -26,8 +26,8 @@ CENTER_TRANSITION_MARGIN = 45
 MAX_VERTICAL_FIGHT_MATCH_DISTANCE = 120
 MAX_BRACKET_DEPTH = 8
 PDF_CANDIDATES = [
-    "TiragesV1-D2.pdf",
     "Tirages.pdf",
+    "TiragesV1-D2.pdf",
     "Tirages..pdf",  # Legacy organizer filename used in earlier competition files
 ]
 

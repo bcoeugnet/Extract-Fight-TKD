@@ -3,177 +3,53 @@
   "fighters": [
     {
       "name": "CHERINE FAKKOUL",
-      "number": "362",
-      "registration_color": "Blue",
-      "page": 5
+      "number": "151",
+      "registration_color": "Red",
+      "page": 6
     },
     {
       "name": "RITEDJ SALEMKOUR",
-      "number": "368",
+      "number": "147",
       "registration_color": "Red",
-      "page": 5
+      "page": 6
     },
     {
       "name": "DOUNIA HENDA",
-      "number": "367",
+      "number": "146",
       "registration_color": "Red",
       "page": 6
     },
     {
       "name": "ABDEL SALAM DJABRI",
-      "number": "360",
-      "registration_color": "Red",
-      "page": 9
-    },
-    {
-      "name": "MALIK NACTO GBOSSOU",
-      "number": "353",
+      "number": "145",
       "registration_color": "Blue",
       "page": 11
     },
     {
-      "name": "EVA PENLOUP",
-      "number": "364",
-      "registration_color": "Red",
-      "page": 16
-    },
-    {
       "name": "SELMA HENDA",
-      "number": "366",
-      "registration_color": "Red",
-      "page": 16
-    },
-    {
-      "name": "INES DJABRI",
-      "number": "359",
+      "number": "150",
       "registration_color": "Blue",
-      "page": 38
+      "page": 19
     },
     {
-      "name": "MARIE MIRGUET",
-      "number": "369",
-      "registration_color": "Red",
-      "page": 41
+      "name": "MOHAMED MECHACHA",
+      "number": "148",
+      "registration_color": "Blue",
+      "page": 29
+    },
+    {
+      "name": "RAYAN MEDROUH",
+      "number": "149",
+      "registration_color": "Blue",
+      "page": 31
     }
   ],
   "fights": [
     {
-      "fight_number": "502",
+      "fight_number": "117",
       "fighter1": {
         "name": "CHERINE FAKKOUL",
-        "number": "362",
-        "registration_color": "Blue"
-      },
-      "fighter2": {
-        "name": "À déterminer",
-        "number": "",
-        "registration_color": ""
-      },
-      "our_fighter1": true,
-      "our_fighter2": false,
-      "page": 5
-    },
-    {
-      "fight_number": "523",
-      "fighter1": {
-        "name": "CHERINE FAKKOUL",
-        "number": "362",
-        "registration_color": "Blue"
-      },
-      "fighter2": {
-        "name": "À déterminer",
-        "number": "",
-        "registration_color": ""
-      },
-      "our_fighter1": true,
-      "our_fighter2": false,
-      "page": 5
-    },
-    {
-      "fight_number": "550",
-      "fighter1": {
-        "name": "CHERINE FAKKOUL",
-        "number": "362",
-        "registration_color": "Blue"
-      },
-      "fighter2": {
-        "name": "À déterminer",
-        "number": "",
-        "registration_color": ""
-      },
-      "our_fighter1": true,
-      "our_fighter2": false,
-      "page": 5
-    },
-    {
-      "fight_number": "568",
-      "fighter1": {
-        "name": "CHERINE FAKKOUL",
-        "number": "362",
-        "registration_color": "Blue"
-      },
-      "fighter2": {
-        "name": "À déterminer",
-        "number": "",
-        "registration_color": ""
-      },
-      "our_fighter1": true,
-      "our_fighter2": false,
-      "page": 5
-    },
-    {
-      "fight_number": "526",
-      "fighter1": {
-        "name": "RITEDJ SALEMKOUR",
-        "number": "368",
-        "registration_color": "Red"
-      },
-      "fighter2": {
-        "name": "À déterminer",
-        "number": "",
-        "registration_color": ""
-      },
-      "our_fighter1": true,
-      "our_fighter2": false,
-      "page": 5
-    },
-    {
-      "fight_number": "551",
-      "fighter1": {
-        "name": "RITEDJ SALEMKOUR",
-        "number": "368",
-        "registration_color": "Red"
-      },
-      "fighter2": {
-        "name": "À déterminer",
-        "number": "",
-        "registration_color": ""
-      },
-      "our_fighter1": true,
-      "our_fighter2": false,
-      "page": 5
-    },
-    {
-      "fight_number": "568",
-      "fighter1": {
-        "name": "RITEDJ SALEMKOUR",
-        "number": "368",
-        "registration_color": "Red"
-      },
-      "fighter2": {
-        "name": "À déterminer",
-        "number": "",
-        "registration_color": ""
-      },
-      "our_fighter1": true,
-      "our_fighter2": false,
-      "page": 5
-    },
-    {
-      "fight_number": "515.1",
-      "fighter1": {
-        "name": "DOUNIA HENDA",
-        "number": "367",
+        "number": "151",
         "registration_color": "Red"
       },
       "fighter2": {
@@ -186,26 +62,10 @@
       "page": 6
     },
     {
-      "fight_number": "544",
+      "fight_number": "143",
       "fighter1": {
-        "name": "DOUNIA HENDA",
-        "number": "367",
-        "registration_color": "Red"
-      },
-      "fighter2": {
-        "name": "À déterminer",
-        "number": "",
-        "registration_color": ""
-      },
-      "our_fighter1": true,
-      "our_fighter2": false,
-      "page": 6
-    },
-    {
-      "fight_number": "565",
-      "fighter1": {
-        "name": "DOUNIA HENDA",
-        "number": "367",
+        "name": "CHERINE FAKKOUL",
+        "number": "151",
         "registration_color": "Blue"
       },
       "fighter2": {
@@ -218,26 +78,10 @@
       "page": 6
     },
     {
-      "fight_number": "219",
+      "fight_number": "157",
       "fighter1": {
-        "name": "ABDEL SALAM DJABRI",
-        "number": "360",
-        "registration_color": "Red"
-      },
-      "fighter2": {
-        "name": "À déterminer",
-        "number": "",
-        "registration_color": ""
-      },
-      "our_fighter1": true,
-      "our_fighter2": false,
-      "page": 9
-    },
-    {
-      "fight_number": "238",
-      "fighter1": {
-        "name": "ABDEL SALAM DJABRI",
-        "number": "360",
+        "name": "CHERINE FAKKOUL",
+        "number": "151",
         "registration_color": "Blue"
       },
       "fighter2": {
@@ -247,13 +91,13 @@
       },
       "our_fighter1": true,
       "our_fighter2": false,
-      "page": 9
+      "page": 6
     },
     {
-      "fight_number": "250",
+      "fight_number": "164",
       "fighter1": {
-        "name": "ABDEL SALAM DJABRI",
-        "number": "360",
+        "name": "CHERINE FAKKOUL",
+        "number": "151",
         "registration_color": "Red"
       },
       "fighter2": {
@@ -263,13 +107,13 @@
       },
       "our_fighter1": true,
       "our_fighter2": false,
-      "page": 9
+      "page": 6
     },
     {
-      "fight_number": "257",
+      "fight_number": "115",
       "fighter1": {
-        "name": "ABDEL SALAM DJABRI",
-        "number": "360",
+        "name": "RITEDJ SALEMKOUR",
+        "number": "147",
         "registration_color": "Red"
       },
       "fighter2": {
@@ -279,13 +123,125 @@
       },
       "our_fighter1": true,
       "our_fighter2": false,
-      "page": 9
+      "page": 6
     },
     {
-      "fight_number": "222",
+      "fight_number": "142",
       "fighter1": {
-        "name": "MALIK NACTO GBOSSOU",
-        "number": "353",
+        "name": "RITEDJ SALEMKOUR",
+        "number": "147",
+        "registration_color": "Blue"
+      },
+      "fighter2": {
+        "name": "À déterminer",
+        "number": "",
+        "registration_color": ""
+      },
+      "our_fighter1": true,
+      "our_fighter2": false,
+      "page": 6
+    },
+    {
+      "fight_number": "156",
+      "fighter1": {
+        "name": "RITEDJ SALEMKOUR",
+        "number": "147",
+        "registration_color": "Red"
+      },
+      "fighter2": {
+        "name": "À déterminer",
+        "number": "",
+        "registration_color": ""
+      },
+      "our_fighter1": true,
+      "our_fighter2": false,
+      "page": 6
+    },
+    {
+      "fight_number": "164",
+      "fighter1": {
+        "name": "RITEDJ SALEMKOUR",
+        "number": "147",
+        "registration_color": "Blue"
+      },
+      "fighter2": {
+        "name": "À déterminer",
+        "number": "",
+        "registration_color": ""
+      },
+      "our_fighter1": true,
+      "our_fighter2": false,
+      "page": 6
+    },
+    {
+      "fight_number": "119",
+      "fighter1": {
+        "name": "DOUNIA HENDA",
+        "number": "146",
+        "registration_color": "Red"
+      },
+      "fighter2": {
+        "name": "À déterminer",
+        "number": "",
+        "registration_color": ""
+      },
+      "our_fighter1": true,
+      "our_fighter2": false,
+      "page": 6
+    },
+    {
+      "fight_number": "144",
+      "fighter1": {
+        "name": "DOUNIA HENDA",
+        "number": "146",
+        "registration_color": "Blue"
+      },
+      "fighter2": {
+        "name": "À déterminer",
+        "number": "",
+        "registration_color": ""
+      },
+      "our_fighter1": true,
+      "our_fighter2": false,
+      "page": 6
+    },
+    {
+      "fight_number": "157",
+      "fighter1": {
+        "name": "DOUNIA HENDA",
+        "number": "146",
+        "registration_color": "Red"
+      },
+      "fighter2": {
+        "name": "À déterminer",
+        "number": "",
+        "registration_color": ""
+      },
+      "our_fighter1": true,
+      "our_fighter2": false,
+      "page": 6
+    },
+    {
+      "fight_number": "164",
+      "fighter1": {
+        "name": "DOUNIA HENDA",
+        "number": "146",
+        "registration_color": "Red"
+      },
+      "fighter2": {
+        "name": "À déterminer",
+        "number": "",
+        "registration_color": ""
+      },
+      "our_fighter1": true,
+      "our_fighter2": false,
+      "page": 6
+    },
+    {
+      "fight_number": "209",
+      "fighter1": {
+        "name": "ABDEL SALAM DJABRI",
+        "number": "145",
         "registration_color": "Blue"
       },
       "fighter2": {
@@ -298,10 +254,10 @@
       "page": 11
     },
     {
-      "fight_number": "242",
+      "fight_number": "235",
       "fighter1": {
-        "name": "MALIK NACTO GBOSSOU",
-        "number": "353",
+        "name": "ABDEL SALAM DJABRI",
+        "number": "145",
         "registration_color": "Red"
       },
       "fighter2": {
@@ -314,10 +270,10 @@
       "page": 11
     },
     {
-      "fight_number": "253",
+      "fight_number": "251",
       "fighter1": {
-        "name": "MALIK NACTO GBOSSOU",
-        "number": "353",
+        "name": "ABDEL SALAM DJABRI",
+        "number": "145",
         "registration_color": "Red"
       },
       "fighter2": {
@@ -330,10 +286,10 @@
       "page": 11
     },
     {
-      "fight_number": "425",
+      "fight_number": "260",
       "fighter1": {
-        "name": "EVA PENLOUP",
-        "number": "364",
+        "name": "ABDEL SALAM DJABRI",
+        "number": "145",
         "registration_color": "Red"
       },
       "fighter2": {
@@ -343,13 +299,13 @@
       },
       "our_fighter1": true,
       "our_fighter2": false,
-      "page": 16
+      "page": 11
     },
     {
-      "fight_number": "451",
+      "fight_number": "265",
       "fighter1": {
-        "name": "EVA PENLOUP",
-        "number": "364",
+        "name": "ABDEL SALAM DJABRI",
+        "number": "145",
         "registration_color": "Blue"
       },
       "fighter2": {
@@ -359,46 +315,14 @@
       },
       "our_fighter1": true,
       "our_fighter2": false,
-      "page": 16
+      "page": 11
     },
     {
-      "fight_number": "467",
-      "fighter1": {
-        "name": "EVA PENLOUP",
-        "number": "364",
-        "registration_color": "Red"
-      },
-      "fighter2": {
-        "name": "À déterminer",
-        "number": "",
-        "registration_color": ""
-      },
-      "our_fighter1": true,
-      "our_fighter2": false,
-      "page": 16
-    },
-    {
-      "fight_number": "475",
-      "fighter1": {
-        "name": "EVA PENLOUP",
-        "number": "364",
-        "registration_color": "Red"
-      },
-      "fighter2": {
-        "name": "À déterminer",
-        "number": "",
-        "registration_color": ""
-      },
-      "our_fighter1": true,
-      "our_fighter2": false,
-      "page": 16
-    },
-    {
-      "fight_number": "422",
+      "fight_number": "255",
       "fighter1": {
         "name": "SELMA HENDA",
-        "number": "366",
-        "registration_color": "Red"
+        "number": "150",
+        "registration_color": "Blue"
       },
       "fighter2": {
         "name": "À déterminer",
@@ -407,13 +331,13 @@
       },
       "our_fighter1": true,
       "our_fighter2": false,
-      "page": 16
+      "page": 19
     },
     {
-      "fight_number": "449",
+      "fight_number": "262",
       "fighter1": {
         "name": "SELMA HENDA",
-        "number": "366",
+        "number": "150",
         "registration_color": "Red"
       },
       "fighter2": {
@@ -423,29 +347,13 @@
       },
       "our_fighter1": true,
       "our_fighter2": false,
-      "page": 16
+      "page": 19
     },
     {
-      "fight_number": "466",
+      "fight_number": "420",
       "fighter1": {
-        "name": "SELMA HENDA",
-        "number": "366",
-        "registration_color": "Red"
-      },
-      "fighter2": {
-        "name": "À déterminer",
-        "number": "",
-        "registration_color": ""
-      },
-      "our_fighter1": true,
-      "our_fighter2": false,
-      "page": 16
-    },
-    {
-      "fight_number": "475",
-      "fighter1": {
-        "name": "SELMA HENDA",
-        "number": "366",
+        "name": "MOHAMED MECHACHA",
+        "number": "148",
         "registration_color": "Blue"
       },
       "fighter2": {
@@ -455,13 +363,13 @@
       },
       "our_fighter1": true,
       "our_fighter2": false,
-      "page": 16
+      "page": 29
     },
     {
-      "fight_number": "317",
+      "fight_number": "443",
       "fighter1": {
-        "name": "INES DJABRI",
-        "number": "359",
+        "name": "MOHAMED MECHACHA",
+        "number": "148",
         "registration_color": "Blue"
       },
       "fighter2": {
@@ -471,45 +379,13 @@
       },
       "our_fighter1": true,
       "our_fighter2": false,
-      "page": 38
+      "page": 29
     },
     {
-      "fight_number": "338",
+      "fight_number": "455",
       "fighter1": {
-        "name": "INES DJABRI",
-        "number": "359",
-        "registration_color": "Red"
-      },
-      "fighter2": {
-        "name": "À déterminer",
-        "number": "",
-        "registration_color": ""
-      },
-      "our_fighter1": true,
-      "our_fighter2": false,
-      "page": 38
-    },
-    {
-      "fight_number": "351",
-      "fighter1": {
-        "name": "INES DJABRI",
-        "number": "359",
-        "registration_color": "Red"
-      },
-      "fighter2": {
-        "name": "À déterminer",
-        "number": "",
-        "registration_color": ""
-      },
-      "our_fighter1": true,
-      "our_fighter2": false,
-      "page": 38
-    },
-    {
-      "fight_number": "358",
-      "fighter1": {
-        "name": "INES DJABRI",
-        "number": "359",
+        "name": "MOHAMED MECHACHA",
+        "number": "148",
         "registration_color": "Blue"
       },
       "fighter2": {
@@ -519,45 +395,13 @@
       },
       "our_fighter1": true,
       "our_fighter2": false,
-      "page": 38
+      "page": 29
     },
     {
-      "fight_number": "330",
+      "fight_number": "462",
       "fighter1": {
-        "name": "MARIE MIRGUET",
-        "number": "369",
-        "registration_color": "Red"
-      },
-      "fighter2": {
-        "name": "À déterminer",
-        "number": "",
-        "registration_color": ""
-      },
-      "our_fighter1": true,
-      "our_fighter2": false,
-      "page": 41
-    },
-    {
-      "fight_number": "347",
-      "fighter1": {
-        "name": "MARIE MIRGUET",
-        "number": "369",
-        "registration_color": "Red"
-      },
-      "fighter2": {
-        "name": "À déterminer",
-        "number": "",
-        "registration_color": ""
-      },
-      "our_fighter1": true,
-      "our_fighter2": false,
-      "page": 41
-    },
-    {
-      "fight_number": "356",
-      "fighter1": {
-        "name": "MARIE MIRGUET",
-        "number": "369",
+        "name": "MOHAMED MECHACHA",
+        "number": "148",
         "registration_color": "Blue"
       },
       "fighter2": {
@@ -567,7 +411,87 @@
       },
       "our_fighter1": true,
       "our_fighter2": false,
-      "page": 41
+      "page": 29
+    },
+    {
+      "fight_number": "465",
+      "fighter1": {
+        "name": "MOHAMED MECHACHA",
+        "number": "148",
+        "registration_color": "Red"
+      },
+      "fighter2": {
+        "name": "À déterminer",
+        "number": "",
+        "registration_color": ""
+      },
+      "our_fighter1": true,
+      "our_fighter2": false,
+      "page": 29
+    },
+    {
+      "fight_number": "622",
+      "fighter1": {
+        "name": "RAYAN MEDROUH",
+        "number": "149",
+        "registration_color": "Blue"
+      },
+      "fighter2": {
+        "name": "À déterminer",
+        "number": "",
+        "registration_color": ""
+      },
+      "our_fighter1": true,
+      "our_fighter2": false,
+      "page": 31
+    },
+    {
+      "fight_number": "636",
+      "fighter1": {
+        "name": "RAYAN MEDROUH",
+        "number": "149",
+        "registration_color": "Red"
+      },
+      "fighter2": {
+        "name": "À déterminer",
+        "number": "",
+        "registration_color": ""
+      },
+      "our_fighter1": true,
+      "our_fighter2": false,
+      "page": 31
+    },
+    {
+      "fight_number": "652",
+      "fighter1": {
+        "name": "RAYAN MEDROUH",
+        "number": "149",
+        "registration_color": "Red"
+      },
+      "fighter2": {
+        "name": "À déterminer",
+        "number": "",
+        "registration_color": ""
+      },
+      "our_fighter1": true,
+      "our_fighter2": false,
+      "page": 31
+    },
+    {
+      "fight_number": "665",
+      "fighter1": {
+        "name": "RAYAN MEDROUH",
+        "number": "149",
+        "registration_color": "Red"
+      },
+      "fighter2": {
+        "name": "À déterminer",
+        "number": "",
+        "registration_color": ""
+      },
+      "our_fighter1": true,
+      "our_fighter2": false,
+      "page": 31
     }
   ]
 }

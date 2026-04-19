@@ -73,7 +73,9 @@ git push
 
 ```
 .
-├── Tirages..pdf              # PDF original avec les brackets
+├── TiragesV1-D2.pdf          # PDF du tirage (journée courante)
+├── Tirages.pdf               # Ancien format de nommage (compatibilité)
+├── Tirages..pdf              # Ancien format de nommage (compatibilité)
 ├── extract_fights.py         # Script d'extraction des données
 ├── fight_data.json           # Données extraites (généré automatiquement)
 ├── fight_results.json        # Résultats des combats (à mettre à jour manuellement)
@@ -98,7 +100,7 @@ git push
 ## 🔄 Workflow Automatique
 
 Le système CI/CD GitHub Actions :
-1. Se déclenche lors de modifications de `fight_results.json` ou `Tirages..pdf`
+1. Se déclenche lors de modifications de `fight_results.json` ou d'un PDF de tirage (`TiragesV1-D2.pdf`, `Tirages.pdf`, `Tirages..pdf`)
 2. Réextrait les données du PDF
 3. Génère `fight_data.json`
 4. Déploie le site web mis à jour sur GitHub Pages

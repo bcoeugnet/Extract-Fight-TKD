@@ -130,7 +130,9 @@ Website shows:
 
 ```
 Extract-Fight-TKD/
-├── Tirages..pdf                  # Original competition PDF
+├── TiragesV1-D2.pdf              # PDF du tirage (journée courante)
+├── Tirages.pdf                   # Ancien format de nommage (compatibilité)
+├── Tirages..pdf                  # Ancien format de nommage (compatibilité)
 ├── extract_fights.py             # Python parser (auto-runs in CI/CD)
 ├── fight_data.json               # Extracted data (auto-generated)
 ├── fight_results.json            # Manual updates (EDIT THIS)

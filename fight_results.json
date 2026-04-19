@@ -1,31 +1,5 @@
 {
-  "fight_results": {
-    "115": "win",
-    "117": "win",
-    "146:119": "loss",
-    "142": "win",
-    "143": "loss",
-    "144": "loss",
-    "156": "win",
-    "157": "",
-    "147:164": "loss",
-    "209": "win",
-    "235": "win",
-    "251": "win",
-    "255": "loss",
-    "260": "win",
-    "262": "",
-    "265": "loss",
-    "420": "win",
-    "443": "win",
-    "455": "win",
-    "462": "win",
-    "465": "win",
-    "622": "loss",
-    "636": "",
-    "652": "",
-    "665": ""
-  },
+  "fight_results": {},
   "comments": {
     "instructions": "For duplicate fight numbers, use 'fighterNumber:fightNumber' (preferred) or 'fighterName:fightNumber'; keep plain 'fight_number' only when unique: e.g. '151:157': 'loss'",
     "example": {

@@ -347,24 +347,77 @@
     </div>
 
     <script>
+        function buildFighterKey(fighter, fallbackId = '') {
+            const fighterNumber = String(fighter?.number || '').trim();
+            if (fighterNumber) return `number:${fighterNumber}`;
+            const fighterName = String(fighter?.name || '').trim().toUpperCase();
+            if (fighterName) return `name:${fighterName}`;
+            return `unknown-fighter:${fallbackId}`;
+        }
+
+        function buildFightKey(fight, fallbackId = '') {
+            const fightNumber = String(fight?.fight_number || '').trim();
+            const ourFighter = getOurFighter(fight);
+            const fighterNumber = String(ourFighter?.number || '').trim();
+            if (fighterNumber) return `${fighterNumber}:${fightNumber}`;
+            const fighterName = String(ourFighter?.name || '').trim().toUpperCase();
+            if (fighterName || fightNumber) return `${fighterName}:${fightNumber}`;
+            return `unknown-fight:${fallbackId}`;
+        }
+
+        function mergeFightData(baseData = {}, manualData = {}) {
+            const fightersMap = new Map();
+            (baseData.fighters || []).forEach((fighter, index) => fightersMap.set(buildFighterKey(fighter, `base-${index}`), fighter));
+            // Manual entries intentionally override generated entries with the same fighter key.
+            (manualData.fighters || []).forEach((fighter, index) => fightersMap.set(buildFighterKey(fighter, `manual-${index}`), fighter));
+
+            const fightsMap = new Map();
+            (baseData.fights || []).forEach((fight, index) => fightsMap.set(buildFightKey(fight, `base-${index}`), fight));
+            // Manual entries intentionally override generated entries with the same fight key.
+            (manualData.fights || []).forEach((fight, index) => fightsMap.set(buildFightKey(fight, `manual-${index}`), fight));
+
+            return {
+                fighters: Array.from(fightersMap.values()),
+                fights: Array.from(fightsMap.values())
+            };
+        }
+
+        async function loadOptionalJson(path) {
+            try {
+                const response = await fetch(path);
+                if (response.ok) {
+                    return response.json();
+                }
+                if (response.status === 404) {
+                    return null;
+                }
+                throw new Error(`Failed to load ${path}: HTTP ${response.status}`);
+            } catch (error) {
+                throw new Error(`Failed to load ${path}: ${error.message}`);
+            }
+        }
+
         // Load fight data
         async function loadData() {
             try {
-                const [fightDataResponse, resultsResponse] = await Promise.all([
-                    fetch('fight_data.json'),
+                const [fightData, manualFightData, resultsResponse] = await Promise.all([
+                    loadOptionalJson('fight_data.json'),
+                    loadOptionalJson('fight.json'),
                     fetch('fight_results.json')
                 ]);
                 
-                if (!fightDataResponse.ok || !resultsResponse.ok) {
+                if (!resultsResponse.ok) {
                     throw new Error('Failed to load data files');
                 }
-                
-                const fightData = await fightDataResponse.json();
+                if (!fightData && !manualFightData) {
+                    throw new Error('No fight data available: both fight_data.json and fight.json are missing or failed to load');
+                }
                 const resultsData = await resultsResponse.json();
+                const mergedFightData = mergeFightData(fightData || {}, manualFightData || {});
                 
                 return {
-                    fighters: fightData.fighters,
-                    fights: fightData.fights,
+                    fighters: mergedFightData.fighters,
+                    fights: mergedFightData.fights,
                     results: resultsData.fight_results || {}
                 };
             } catch (error) {
